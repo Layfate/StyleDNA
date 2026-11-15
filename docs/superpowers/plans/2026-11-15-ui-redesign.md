@@ -1,5 +1,7 @@
 # StyleDNA UI Redesign Implementation Plan
 
+Historical implementation record. `docs/PRODUCT_SCOPE.md` supersedes planned image-generation/history destinations; current navigation is Dashboard, Studio, Library, and Settings.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Deliver the user-requested calm, readable, adjustable desktop UI while preserving real Phase 1 features.

@@ -1,5 +1,7 @@
 # StyleDNA Phase 1 design
 
+**Scope clarification:** Historical design. The user's later image-to-skill-only clarification in `docs/PRODUCT_SCOPE.md` supersedes references below to future image synthesis, generated-image history, and model training. Those are outside the current product scope.
+
 Status: approved by the user on 2026-11-15. Phase 1 implementation authorized.
 
 ## Intent

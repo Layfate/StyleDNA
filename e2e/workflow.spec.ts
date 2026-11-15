@@ -37,17 +37,19 @@ test('import, measure, edit, persist, export and reimport a real skill', async (
   await page.screenshot({ path: 'test-results/studio.png', fullPage: true })
 })
 
-test('unsaved navigation is guarded and unavailable features are disclosed', async ({ page }) => {
+test('skill-generator scope is clear and unsaved navigation remains guarded', async ({ page }) => {
   await page.goto('/')
+  await expect(page.getByRole('button', { name: 'AI Generator', exact: true })).toHaveCount(0)
+  await expect(page.getByRole('button', { name: 'Image History', exact: true })).toHaveCount(0)
   await page.getByRole('button', { name: 'New skill', exact: true }).click()
   await page.getByLabel('Style name').fill('Do not lose this')
   await page.getByRole('button', { name: 'Dashboard', exact: true }).click()
   await expect(page.getByRole('dialog')).toBeVisible()
   await page.getByRole('button', { name: 'Keep editing', exact: true }).click()
   await expect(page.getByLabel('Style name')).toHaveValue('Do not lose this')
-  await page.getByRole('button', { name: 'AI Generator', exact: true }).click()
+  await page.getByRole('button', { name: 'Settings & Providers', exact: true }).click()
   await page.getByRole('button', { name: 'Discard changes', exact: true }).click()
-  await expect(page.getByText('Image generation is coming in Phase 2.')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible()
 })
 
 test('development proxy refuses hostile origins before adding authorization', async ({

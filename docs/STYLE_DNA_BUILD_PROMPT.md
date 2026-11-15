@@ -1,6 +1,6 @@
 # StyleDNA — implementation brief
 
-Build **StyleDNA**, an open-source, local-first desktop tool for turning reference images into editable, reusable AI image-generation style skills.
+Build **StyleDNA**, an open-source, local-first desktop tool for turning reference images into editable, reusable AI style skills and `SKILL.md` files.
 
 **Tagline:** Turn Images Into Reusable AI Style Skills.
 
@@ -10,7 +10,7 @@ Start with a complete Phase 1 vertical slice: import images → analyze → edit
 
 The primary user is a creator who wants to reuse a visual language across different subjects. Separate reusable style traits from the content of an individual reference. Never promise exact reproduction, present prompt guidance as training, or substitute simulated AI results when a provider fails.
 
-Finish and verify Phase 1 before adding generation. Preserve a clear roadmap for subsequent phases without presenting unfinished controls as working functionality.
+Deliver the complete image-to-skill workflow. The product generates reusable skills and style profiles; in-app image synthesis, generation-provider integrations, generated-image history, and model training are outside scope. This follows the user's clarified intent in `docs/PRODUCT_SCOPE.md` and supersedes earlier image-generator plans.
 
 ## Required stack
 
@@ -19,7 +19,6 @@ Finish and verify Phase 1 before adding generation. Preserve a clear roadmap for
 - Python 3.12+ FastAPI service; Pillow and headless OpenCV for image processing.
 - SQLite with explicit schema migrations and indexed library queries.
 - Pluggable analysis providers, starting with Ollama for local vision inference.
-- Later generation adapters for concrete FLUX/SDXL backends and compatible APIs; model families alone are not provider implementations.
 
 At implementation time, verify stable compatible dependencies against official documentation, pin resolved versions, and commit lockfiles. Prefer a small, readable architecture over speculative frameworks.
 
@@ -36,7 +35,7 @@ Create bounded previews and thumbnails, normalize orientation and color handling
 1. **Local measurements:** real palette, dimensions, contrast, saturation, luminance, and edge/texture measurements. These work without an AI model. Leave semantic fields unassessed until edited; do not invent art styles, materials, or composition labels from simple statistics.
 2. **Ollama vision:** discover the local service and available models; use capability checks where available. Send reference previews only after the user selects this mode and starts analysis. Request schema-constrained output, validate it, and return clear errors for unavailable models, malformed responses, or unsupported capabilities. Never silently switch modes.
 
-For multiple references, retain per-image findings and synthesize recurring traits separately from subject-specific details. Phase 1 uses equal reference influence; adjustable weighting belongs to Phase 3. Clearly identify measurements, model interpretations, and user edits. Model interpretations are suggestions, not calibrated confidence scores.
+For multiple references, retain per-image findings and synthesize recurring traits separately from subject-specific details. The current implementation uses equal reference influence. Clearly identify measurements, model interpretations, and user edits. Model interpretations are suggestions, not calibrated confidence scores.
 
 ### Editable style profile
 
@@ -56,9 +55,9 @@ Export Markdown, JSON, and ZIP packages containing `SKILL.md`, `style.json`, a v
 
 Use a dark, image-first creative workspace with warm neutral surfaces, restrained accent color, compact sidebar navigation, readable typography, accessible contrast, keyboard focus, reduced-motion support, and an optional light theme. Avoid oversized dashboard cards and decorative gradients.
 
-Pages: Dashboard, Image-to-Skill Studio, Skill Library, Settings & AI Providers. Keep AI Generator and Image History visible as clearly labeled planned destinations with explanatory text and no simulated controls or sample output presented as user data.
+Pages: Dashboard, Image-to-Skill Studio, Skill Library, Settings & AI Providers. Keep navigation focused on reference analysis, skill creation, library management, and exports. Retain skill revision history.
 
-Studio layout: reference tray on the left, editable style profile in the center, generated Markdown preview on the right. Collapse panels sensibly on smaller desktop windows. Provide progress, cancellation, recovery, and a clear indication of whether images stay local or go to a provider.
+Studio layout: adjustable reference and profile panels, with a collapsible bottom Markdown preview. Stack panels sensibly on smaller windows. Provide progress, cancellation, recovery, and a clear indication of whether images stay local or go to an analysis provider.
 
 ## Architecture and security requirements
 
@@ -72,13 +71,13 @@ Studio layout: reference tray on the left, editable style profile in the center,
 - SQLite writes and filesystem changes must remain consistent across validation failures, cancellation, interrupted tasks, and imports. Use staged assets and startup cleanup for abandoned work.
 - No telemetry by default. Redact credentials, image payloads, and sensitive local paths from logs.
 
-## Later phases
+## Further development
 
-**Phase 2 — real image generation:** implement selected concrete backends with capability discovery, model selection, subject prompts enhanced with skill rules, supported resolution/aspect/seed/count settings, reference conditioning only where supported, cancellation semantics, saved image/settings provenance, history, and comparison. External uploads require an explicit generation action that identifies the destination provider. Persist asynchronous jobs and disclose whether cancellation stops local tracking or remote work.
+**Analysis quality:** improve recurring-style extraction, reference synthesis, uncertainty handling, and human review while keeping measurement evidence distinct from model interpretations.
 
-**Phase 3 — advanced style control:** editable multi-reference weights, supported style-strength controls, optional explicitly labeled similarity metrics, and optional external LoRA workflows. Document metric limitations and training resource requirements.
+**Skill authoring and compatibility:** improve structured editing, reusable instruction quality, reference organization, and portable-package support. Document target-agent conventions only after verifying them.
 
-**Phase 4 — release hardening:** performance profiling, security review, accessibility checks, installer validation, platform-specific CI, signing guidance, and versioned release artifacts. Target Windows `.exe`/`.msi`, macOS `.dmg`/`.app` archive, and Linux `.AppImage`/`.deb`/`.rpm` only where actually built successfully. Configure workflows without claiming that configuration proves support.
+**Release hardening:** performance profiling, security review, accessibility checks, installer validation, platform-specific CI, signing guidance, and versioned release artifacts. Target Windows `.exe`/`.msi`, macOS `.dmg`/`.app` archive, and Linux `.AppImage`/`.deb`/`.rpm` only where actually built successfully. Configure workflows without claiming that configuration proves support.
 
 ## Repository deliverables
 

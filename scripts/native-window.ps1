@@ -15,6 +15,7 @@ public static class StyleDnaWindowTest {
     [DllImport("user32.dll")] public static extern bool PostMessage(IntPtr hwnd, uint msg, IntPtr w, IntPtr l);
     [DllImport("user32.dll")] public static extern bool SetWindowPos(IntPtr hwnd, IntPtr insert, int x, int y, int width, int height, uint flags);
     [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr hwnd);
+    [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
 }
 '@
 $taskProcess.Refresh()
@@ -59,9 +60,17 @@ if ($Action -eq 'CheckClipboard') {
     if (-not $taskDialog) { throw 'Owned native Save As dialog was not found' }
     # This Windows dialog does not expose a filename ValuePattern on this host.
     # Exercise its normal keyboard mnemonic after explicitly focusing this owned dialog.
-    [void][StyleDnaWindowTest]::SetForegroundWindow([IntPtr]$taskDialog.Current.NativeWindowHandle)
+    $taskDialogHandle = [IntPtr]$taskDialog.Current.NativeWindowHandle
+    for ($taskFocusAttempt = 0; $taskFocusAttempt -lt 20; $taskFocusAttempt++) {
+        [void][StyleDnaWindowTest]::SetForegroundWindow($taskDialogHandle)
+        Start-Sleep -Milliseconds 100
+        if ([StyleDnaWindowTest]::GetForegroundWindow() -eq $taskDialogHandle) { break }
+    }
+    if ([StyleDnaWindowTest]::GetForegroundWindow() -ne $taskDialogHandle) {
+        throw 'Owned save dialog could not receive focus; no keyboard input was sent'
+    }
     Add-Type -AssemblyName System.Windows.Forms
-    Start-Sleep -Milliseconds 150
+    Start-Sleep -Milliseconds 300
     [System.Windows.Forms.SendKeys]::SendWait('%n')
     [System.Windows.Forms.SendKeys]::SendWait('^a')
     $taskLiteral = $taskResolvedDestination -replace '([+^%~(){}\[\]])', '{$1}'

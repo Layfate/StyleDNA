@@ -57,6 +57,10 @@ try {
   page.on('pageerror', (e) => failures.push(e.message))
   await page.getByRole('button', { name: 'New skill', exact: true }).waitFor()
   await page.getByRole('heading', { name: 'A home for your visual language.' }).waitFor()
+  if (await page.getByRole('button', { name: 'AI Generator', exact: true }).count())
+    throw new Error('Image-generation navigation is outside product scope')
+  if (await page.getByRole('button', { name: 'Image History', exact: true }).count())
+    throw new Error('Generated-image history is outside product scope')
   await page.locator('.brand-icon img').waitFor()
   await page.waitForFunction(() => {
     const logo = document.querySelector('.brand-icon img')
@@ -121,9 +125,6 @@ try {
   await page.screenshot({ path: 'test-results/desktop-settings-light.png' })
   await page.getByRole('button', { name: 'After hours', exact: false }).click()
   await page.waitForFunction(() => document.documentElement.dataset.theme === 'dark')
-  await page.getByRole('button', { name: 'AI Generator', exact: true }).click()
-  await page.getByText('Image generation is coming in Phase 2.').waitFor()
-  await page.screenshot({ path: 'test-results/desktop-planned.png' })
   await page.getByRole('button', { name: 'Skill Library', exact: true }).click()
   await page
     .getByRole('button', { name: 'Open Amber botanical study', exact: true })

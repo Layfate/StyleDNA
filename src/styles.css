@@ -371,14 +371,6 @@ svg {
 .nav-item.active > svg {
   color: var(--accent);
 }
-.nav-soon {
-  font-size: 11px;
-  color: var(--subtle);
-  margin-left: auto;
-  padding: 1px 5px;
-  border: 1px solid var(--line-soft);
-  border-radius: 4px;
-}
 .sidebar-bottom {
   margin-top: auto;
   padding-top: 20px;
@@ -2113,45 +2105,6 @@ svg {
   margin: 18px 0 0 34px;
   line-height: 1.85;
 }
-.planned-page {
-  max-width: 800px;
-  padding: 80px 35px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.planned-art {
-  display: grid;
-  place-items: center;
-  width: 105px;
-  height: 105px;
-  color: var(--accent);
-  background: var(--panel);
-  border-radius: 24px;
-  margin: 25px 0;
-}
-.planned-page h1 {
-  font-size: 32px;
-  letter-spacing: -0.8px;
-  line-height: 1.4;
-  font-weight: 500;
-}
-.planned-page > p {
-  margin-top: 20px;
-  color: var(--muted);
-  font-size: 16px;
-  line-height: 1.85;
-}
-.planned-page > p.muted {
-  max-width: 510px;
-  color: var(--subtle);
-  font-size: 15px;
-  margin-top: 12px;
-}
-.planned-page > .button {
-  margin-top: 30px;
-}
 .sidebar-compact {
   --sidebar-width: 76px;
 }
@@ -2165,7 +2118,6 @@ svg {
 .sidebar-compact .brand-name,
 .sidebar-compact .new-skill > span,
 .sidebar-compact .nav-item > span,
-.sidebar-compact .nav-soon,
 .sidebar-compact .nav-caption,
 .sidebar-compact .local-card,
 .sidebar-compact .sidebar-version {
@@ -2179,11 +2131,6 @@ svg {
 .sidebar-compact .nav-item {
   padding: 12px;
   justify-content: center;
-}
-.sidebar-compact .future-navigation {
-  margin-top: 30px;
-  padding-top: 16px;
-  border-top: 1px solid var(--line-soft);
 }
 .sidebar-backdrop {
   display: none;
@@ -2675,12 +2622,6 @@ svg {
   }
   .dialog-actions {
     flex-wrap: wrap;
-  }
-  .planned-page {
-    padding-top: 55px;
-  }
-  .planned-page h1 {
-    font-size: 28px;
   }
 }
 @media (max-height: 780px) and (min-width: 961px) {

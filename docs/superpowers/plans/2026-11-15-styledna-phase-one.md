@@ -1,5 +1,7 @@
 # StyleDNA Phase One Implementation Plan
 
+Historical implementation record. `docs/PRODUCT_SCOPE.md` supersedes planned image-generation/history features; those are outside the clarified product scope.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Deliver the approved desktop image-to-skill workflow with durable storage and safe portable packages.

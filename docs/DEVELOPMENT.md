@@ -16,6 +16,8 @@ Run `corepack pnpm build:sidecar`, then `corepack pnpm desktop`. The PyInstaller
 
 `corepack pnpm build:desktop` rebuilds the sidecar and produces native bundles. To restrict formats use `corepack pnpm build:sidecar` followed by `corepack pnpm tauri build --bundles nsis,msi` on Windows, `--bundles app,dmg` on macOS, or `--bundles appimage,deb,rpm` on Linux. Build on the target OS/architecture. No cross-compiling the Python service is attempted.
 
+On Windows, close running StyleDNA instances before native compilation, native unit tests, or installer builds so the build system can refresh the owned sidecar executable.
+
 The package identifier determines the native app-data path. The Rust host passes it explicitly to Python. The bare Python module's default path is named `StyleDNA`; launchers pass their own paths. Settings shows the active directory so users can distinguish development and installed data.
 
 ## Checks and failures

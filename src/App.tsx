@@ -4,7 +4,6 @@ import {
   BookOpen,
   ChevronRight,
   FlaskConical,
-  History,
   LayoutDashboard,
   Loader2,
   PanelLeftClose,
@@ -12,7 +11,6 @@ import {
   Plus,
   Settings2,
   ShieldCheck,
-  Sparkles,
   X,
 } from 'lucide-react'
 import { MotionConfig } from 'motion/react'
@@ -36,22 +34,17 @@ const Dashboard = lazy(() => import('./pages/Dashboard'))
 const Studio = lazy(() => import('./pages/Studio'))
 const Library = lazy(() => import('./pages/Library'))
 const ProviderSettings = lazy(() => import('./pages/Settings'))
-const Planned = lazy(() => import('./pages/Planned'))
 
 const nav = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { id: 'studio', label: 'Image-to-Skill', icon: FlaskConical },
   { id: 'library', label: 'Skill Library', icon: BookOpen },
-  { id: 'generator', label: 'AI Generator', icon: Sparkles, planned: true },
-  { id: 'history', label: 'Image History', icon: History, planned: true },
 ] as const
 const titles: Record<Page, string> = {
   dashboard: 'Overview',
   studio: 'Image-to-Skill Studio',
   library: 'Skill Library',
   settings: 'Settings & Providers',
-  generator: 'AI Generator',
-  history: 'Image History',
 }
 
 export default function App() {
@@ -261,7 +254,7 @@ export default function App() {
             <nav aria-label="Main navigation">
               <div className="nav-group">
                 <span className="nav-caption">Workspace</span>
-                {nav.slice(0, 3).map((item) => (
+                {nav.map((item) => (
                   <Tooltip key={item.id} label={item.id === 'studio' ? 'Style studio' : item.label}>
                     <button
                       className={`nav-item ${page === item.id ? 'active' : ''}`}
@@ -277,23 +270,6 @@ export default function App() {
                             ? 'Skill library'
                             : item.label}
                       </span>
-                    </button>
-                  </Tooltip>
-                ))}
-              </div>
-              <div className="nav-group future-navigation">
-                <span className="nav-caption">Coming later</span>
-                {nav.slice(3).map((item) => (
-                  <Tooltip key={item.id} label={`${item.label} · planned for Phase 2`}>
-                    <button
-                      className={`nav-item ${page === item.id ? 'active' : ''}`}
-                      aria-label={item.label}
-                      aria-current={page === item.id ? 'page' : undefined}
-                      onClick={() => go(item.id)}
-                    >
-                      <item.icon size={20} strokeWidth={1.7} />
-                      <span>{item.label}</span>
-                      <small className="nav-soon">Soon</small>
                     </button>
                   </Tooltip>
                 ))}
@@ -432,9 +408,6 @@ export default function App() {
                     onError={fail}
                     onNotice={setNotice}
                   />
-                )}
-                {(page === 'generator' || page === 'history') && (
-                  <Planned type={page} onStudio={newSkill} />
                 )}
               </Suspense>
             </main>

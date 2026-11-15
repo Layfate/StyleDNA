@@ -101,5 +101,5 @@ export type Job = {
   error: string | null
   reference_ids: string[]
 }
-export type Page = 'dashboard' | 'studio' | 'library' | 'generator' | 'history' | 'settings'
+export type Page = 'dashboard' | 'studio' | 'library' | 'settings'
 export type ProfileChange = <K extends keyof StyleProfile>(key: K, value: StyleProfile[K]) => void

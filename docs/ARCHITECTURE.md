@@ -47,4 +47,4 @@ Native window-close handling is registered by the frontend after its listener is
 
 ## Extension points
 
-Add a provider through an explicit capability contract and schema validation, not by pretending model families implement an HTTP service. Phase 2 must add concrete generation backends, real job/history records, reference conditioning only where supported, explicit external-upload UI, and OS credential storage for authenticated providers. No cloud credential settings are exposed yet.
+Extend image analysis through explicit capability contracts and validated schemas. Further work should improve recurring-style extraction, multi-reference synthesis, profile editing, skill compilation, portable packages, and verified agent-format compatibility. Providers analyze references; image synthesis and generated-image history are outside this application's scope. Any future authenticated analysis provider requires explicit upload UI and OS credential storage. No cloud credential settings are exposed yet. See `PRODUCT_SCOPE.md`.

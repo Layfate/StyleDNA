@@ -2,9 +2,15 @@
 
 Host: Windows x64, 2026-11-15 (Asia/Manila). Node 24.21.0, Python 3.12.10, Rust 1.100.0, pnpm 12.21.0, uv 0.12.19.
 
+## Image-to-skill scope correction 0.1.2
+
+The user clarified that StyleDNA generates reusable image-style skills. AI Generator, generated-image History, their planned screens, and their future roadmap entries were removed. Navigation now exposes Dashboard, Studio, Library, and Settings only. Saved skill revision history remains supported. `PRODUCT_SCOPE.md` is the current scope authority and overrides older design references.
+
+The browser scope regression first failed on the old generator entry, then passed after removal. The full browser suite passes 11 tests, backend suite 40, editor suite 5, and native unit suite 2. Production frontend compilation, lint, formatting, and Windows installer builds passed. The actual Tauri/WebView2 smoke confirmed generator/history destinations are absent and exercised import, analysis, skill saving/export, clipboard, resizing, themes, and close recovery. Current installer filenames/hashes and the screenshot were refreshed for 0.1.2.
+
 ## Branding update 0.1.1
 
-The supplied transparent blue helix/photo-frame logo is used unchanged in the sidebar and README. Desktop PNG/ICO/ICNS assets and the favicon are size/format conversions preserving transparency. The imported original's SHA-256 matches the supplied file. Version 0.1.1 identifies this update; it adds branding rather than Phase 2 features.
+The supplied transparent blue helix/photo-frame logo is used unchanged in the sidebar and README. Desktop PNG/ICO/ICNS assets and the favicon are size/format conversions preserving transparency. The imported original's SHA-256 matches the supplied file. Version 0.1.1 identifies this branding update.
 
 After this update, the backend suite passed 40 tests, editor suite passed 5, complete browser suite passed 11, and native unit suite passed 2. TypeScript/Vite, formatting, lint, packaged-service smoke, and the actual branded Tauri/WebView2 workflow passed. The new logo was inspected in the desktop app; all six ICO image variants were confirmed embedded in the Windows executable. Updated `.exe` and `.msi` installers were built; filenames and hashes are in `BUILD_ARTIFACTS.json`.
 
@@ -52,6 +58,6 @@ The review's short-window recommendation reproduced clipped analysis controls. T
 - macOS/Linux runtime/installers: workflows configured but not run on this Windows host.
 - GitHub Actions: configured locally, not executed on GitHub.
 - Clean-machine installer installation/uninstallation, signing, notarization, public releases, and GitHub publishing: not performed.
-- Generation, generated-image history, adjustable reference weighting, similarity scoring, and LoRA workflows remain later phases.
+- Image synthesis, generated-image history, and model training are outside the clarified product scope. Further work focuses on skill extraction/authoring quality, compatibility, reliability, and platform validation.
 
 No benchmark results or universal coding-agent compatibility are claimed. Tests use isolated data. The repository stays local on `feat/phase-one`; there is no remote or separate base branch to merge into.

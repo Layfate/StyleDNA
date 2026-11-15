@@ -1,18 +1,18 @@
 {
-  "version": "0.1.1",
+  "version": "0.1.2",
   "platform": "windows-x86_64",
   "signed": false,
   "built_on": "2026-11-15",
   "installers": [
     {
-      "file": "artifacts/windows/StyleDNA_0.1.1_x64-setup.exe",
-      "bytes": 80166145,
-      "sha256": "dcda4f4acc66886f912753cbe8cfeb03bdc6eb1289929f5d4610963442bf3f7c"
+      "file": "artifacts/windows/StyleDNA_0.1.2_x64-setup.exe",
+      "bytes": 80164365,
+      "sha256": "9b356b05ff46b2478c7c8697c04c354d89eb063f5d5058354ed4adc45c9696a1"
     },
     {
-      "file": "artifacts/windows/StyleDNA_0.1.1_x64_en-US.msi",
-      "bytes": 81240064,
-      "sha256": "a27712e3d39911a1bfc5393b863eefae35b04e3cc62a9db31efe04ca77dcf34e"
+      "file": "artifacts/windows/StyleDNA_0.1.2_x64_en-US.msi",
+      "bytes": 81235968,
+      "sha256": "0d0403dd43701c90066e2f0e54fa50db2bb8952bf107fa632041ce17bdfd7c31"
     }
   ],
   "verification": "docs/VERIFICATION.md"

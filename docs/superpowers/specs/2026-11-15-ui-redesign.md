@@ -1,5 +1,7 @@
 # StyleDNA UI redesign
 
+**Scope clarification:** The later user clarification in `docs/PRODUCT_SCOPE.md` supersedes references below to planned generator/history destinations. Current navigation contains only Dashboard, Studio, Library, and Settings.
+
 Authorized for implementation by the user's explicit redesign-and-implement request on 2026-11-15. This extends the approved Phase 1 design and preserves its real backend workflows.
 
 The current interface uses 7–12 px secondary text, cramped three-column forms, cropped reference thumbnails, and too many small bordered sections. Replace that density with a calm neutral workspace: 15 px base text, 14 px controls/labels, 12–13 px supporting text, 42 px buttons, generous spacing, and restrained warm gold accents.

@@ -4,9 +4,11 @@
 
 **Turn Images Into Reusable AI Style Skills.**
 
-StyleDNA is a local-first desktop workspace for collecting visual references, reviewing their style, and exporting reusable image-generation instructions. It pairs a Tauri 2 / React interface with a Python image-processing service and a versioned SQLite library.
+StyleDNA is a local-first desktop workspace for collecting visual references, analyzing their style, and generating reusable **`SKILL.md` files**. It pairs a Tauri 2 / React interface with a Python image-processing service and a versioned SQLite library.
 
-## What works in Phase 1
+Its output is reusable **`SKILL.md` files and style profiles**. The workflow is **upload references → analyze style → review and edit → save or export skills**. See [product scope](docs/PRODUCT_SCOPE.md).
+
+## What StyleDNA does
 
 - Import PNG, JPEG, and WebP references with content validation, normalized copies, and thumbnails.
 - Measure real palettes, luminance, saturation, contrast, edges, and texture without an AI model.
@@ -17,7 +19,7 @@ StyleDNA is a local-first desktop workspace for collecting visual references, re
 - Dark/light themes, drag-and-drop import, keyboard navigation, progress/cancellation, and unsaved-change navigation protection.
 - A comfortable, spacious studio with adjustable reference/editor panels, a collapsible Markdown preview, grouped sidebar navigation, and expandable advanced controls.
 
-Generation and generated-image history are explicitly marked as Phase 2. Adjustable reference weights, similarity metrics, and LoRA workflows are later work. Prompt instructions are not model training and cannot guarantee exact visual reproduction.
+The roadmap focuses on style extraction, multi-reference analysis, skill authoring, compatibility, and desktop reliability. In-app image synthesis and generated-image history are outside the product scope. Exported style instructions are guidance for compatible AI tools and cannot guarantee exact visual reproduction.
 
 ## Quick start
 
@@ -56,7 +58,7 @@ Alternatively, import [`examples/amber-study.zip`](examples/amber-study.zip) fro
 
 Install [Ollama](https://ollama.com/) and a compatible vision model separately. Start Ollama, open **Settings & Providers**, save/check its loopback address, and select a model reporting vision support. In the studio choose **Ollama vision** and start analysis. Model discovery never downloads or runs a model automatically. Cloud-routed Ollama models are excluded.
 
-Local measurements extract numeric evidence. They intentionally leave semantic style fields unassessed. Human edits remain useful with no model installed. Ollama interpretations require review and are not calibrated confidence scores. Multiple references have equal influence in this phase.
+Local measurements extract numeric evidence. They intentionally leave semantic style fields unassessed. Human edits remain useful with no model installed. Ollama interpretations require review and are not calibrated confidence scores. Multiple references currently have equal influence.
 
 ## Checks
 
@@ -88,7 +90,7 @@ There is no telemetry, account requirement, or automatic image upload. Measureme
 
 The desktop app stores its database and assets under the OS application-data directory for `com.styledna.desktop`. Settings displays the exact path. Development uses `.styledna-dev/` unless `STYLEDNA_DATA_DIR` is set. Portable packages are the supported per-skill backup mechanism. Quit before backing up an entire data directory; include SQLite WAL files if present.
 
-The authenticated local service binds an ephemeral loopback port. The desktop host owns its process. Credentials are per-launch and are not persisted. Phase 1 has no cloud-provider API keys. See [SECURITY.md](SECURITY.md) and [architecture](docs/ARCHITECTURE.md).
+The authenticated local service binds an ephemeral loopback port. The desktop host owns its process. Credentials are per-launch and are not persisted. The current app has no cloud-provider API keys. See [SECURITY.md](SECURITY.md) and [architecture](docs/ARCHITECTURE.md).
 
 ## Limits and compatibility
 
