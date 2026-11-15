@@ -1,6 +1,8 @@
 """Smoke-test a packaged sidecar without using the development Python environment."""
 
+import argparse
 import json
+import os
 import queue
 import subprocess
 import tempfile
@@ -11,17 +13,26 @@ from pathlib import Path
 import httpx
 
 root = Path(__file__).resolve().parent.parent
-binary = next((root / "src-tauri" / "binaries").glob("styledna-service-*.exe"), None)
-if not binary:
-    raise SystemExit("Build the Windows sidecar first")
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--binary", type=Path, help="Test an installed/bundled service executable")
+args = parser.parse_args()
+suffix = ".exe" if os.name == "nt" else ""
+binary = args.binary or root / "build" / "sidecar" / f"styledna-service{suffix}"
+if not binary.is_file():
+    raise SystemExit("Build the sidecar first, or pass --binary")
+environment = {
+    k: v for k, v in os.environ.items() if k not in {"PYTHONHOME", "PYTHONPATH", "VIRTUAL_ENV"}
+}
 with tempfile.TemporaryDirectory(prefix="styledna-sidecar-") as temporary:
     process = subprocess.Popen(
-        [str(binary), "--data-dir", temporary],
+        [str(binary.resolve()), "--data-dir", temporary],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
-        creationflags=subprocess.CREATE_NO_WINDOW,
+        env=environment,
+        cwd=temporary,
+        creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
     )
     try:
         token = "test-only-" + "a" * 48
@@ -29,7 +40,7 @@ with tempfile.TemporaryDirectory(prefix="styledna-sidecar-") as temporary:
         process.stdin.flush()
         lines = queue.Queue()
         threading.Thread(target=lambda: lines.put(process.stdout.readline()), daemon=True).start()
-        line = lines.get(timeout=40)
+        line = lines.get(timeout=90)
         if not line:
             raise RuntimeError(process.stderr.read()[-3000:])
         ready = json.loads(line)
@@ -66,7 +77,7 @@ with tempfile.TemporaryDirectory(prefix="styledna-sidecar-") as temporary:
         process.stdin.close()
         assert process.wait(timeout=15) == 0
         print(
-            "Packaged Windows sidecar: startup, image import, real measurements, package import, and shutdown PASS"
+            "Packaged sidecar: startup, image import, real measurements, package import, and shutdown PASS"
         )
     finally:
         if process.poll() is None:

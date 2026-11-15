@@ -13,17 +13,21 @@ const probe = createServer()
 await new Promise((resolve) => probe.listen(0, '127.0.0.1', resolve))
 const port = probe.address().port
 await new Promise((resolve) => probe.close(resolve))
-const dataDir = resolve('test-results/native-data')
+const dataDir = resolve(process.env.STYLEDNA_SMOKE_DATA_DIR || 'test-results/native-data')
 mkdirSync(dataDir, { recursive: true })
-const app = spawn(resolve('src-tauri/target/release/styledna-desktop.exe'), [], {
-  stdio: 'ignore',
-  windowsHide: true,
-  env: {
-    ...process.env,
-    STYLEDNA_DATA_DIR: dataDir,
-    WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: `--remote-debugging-port=${port} --remote-debugging-address=127.0.0.1`,
+const app = spawn(
+  resolve(process.env.STYLEDNA_SMOKE_APP || 'src-tauri/target/release/styledna-desktop.exe'),
+  [],
+  {
+    stdio: 'ignore',
+    windowsHide: true,
+    env: {
+      ...process.env,
+      STYLEDNA_DATA_DIR: dataDir,
+      WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: `--remote-debugging-port=${port} --remote-debugging-address=127.0.0.1`,
+    },
   },
-})
+)
 let browser
 const windowAction = (action, ...args) =>
   exec(
