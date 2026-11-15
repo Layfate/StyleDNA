@@ -17,9 +17,25 @@ struct Connection {
 
 #[derive(Default)]
 struct Backend {
+    ui_ready: bool,
     child: Option<CommandChild>,
     connection: Option<Connection>,
     error: Option<String>,
+}
+
+impl Backend {
+    fn guards_close(&self) -> bool {
+        self.ui_ready
+    }
+}
+
+#[tauri::command]
+fn register_close_handler(state: State<'_, Mutex<Backend>>) -> Result<(), String> {
+    state
+        .lock()
+        .map_err(|_| "Service state unavailable")?
+        .ui_ready = true;
+    Ok(())
 }
 
 fn stop_backend(app: &tauri::AppHandle) {
@@ -190,14 +206,14 @@ fn main() {
         .on_window_event(|window, event| {
             if let tauri::WindowEvent::CloseRequested { api, .. } = event {
                 let binding = window.state::<Mutex<Backend>>();
-                let ready = binding.lock().map(|state| state.connection.is_some()).unwrap_or(false);
+                let ready = binding.lock().map(|state| state.guards_close()).unwrap_or(false);
                 if ready {
                     api.prevent_close();
                     let _ = window.emit("desktop-close-requested", ());
                 }
             }
         })
-        .invoke_handler(tauri::generate_handler![backend_connection, save_export, close_application])
+        .invoke_handler(tauri::generate_handler![backend_connection, save_export, close_application, register_close_handler])
         .build(tauri::generate_context!())
         .expect("Could not start StyleDNA");
     app.run(|handle, event| {
@@ -210,6 +226,16 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::valid_export_path;
+    #[test]
+    fn frontend_close_guard_survives_backend_disconnect() {
+        let state = super::Backend {
+            ui_ready: true,
+            connection: None,
+            ..Default::default()
+        };
+        assert!(state.guards_close());
+        assert!(!super::Backend::default().guards_close());
+    }
     #[test]
     fn export_route_is_restricted_to_saved_skill_exports() {
         assert!(valid_export_path(&format!(

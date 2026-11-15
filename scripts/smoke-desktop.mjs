@@ -56,6 +56,7 @@ try {
   const failures = []
   page.on('pageerror', (e) => failures.push(e.message))
   await page.getByRole('button', { name: 'New skill', exact: true }).waitFor()
+  await page.getByRole('heading', { name: 'A home for your visual language.' }).waitFor()
   await page.screenshot({ path: 'test-results/desktop-dashboard.png' })
   await page.getByRole('button', { name: 'New skill', exact: true }).click()
   await page.locator('input[type=file]').setInputFiles('examples/amber-study.png')
@@ -68,6 +69,11 @@ try {
   await page.getByLabel('Lighting & shadows').fill('Soft ambient light. Broad, gentle shadows.')
   await page.getByRole('button', { name: 'Save skill', exact: true }).click()
   await page.getByText('Revision 1', { exact: true }).waitFor()
+  await page.locator('.profile-scroll').evaluate((el) => {
+    el.scrollTop = 0
+  })
+  if (await page.getByRole('button', { name: 'Dismiss notification' }).count())
+    await page.getByRole('button', { name: 'Dismiss notification' }).click()
   await page.screenshot({ path: 'test-results/desktop-studio.png' })
   if (await page.evaluate(() => window.visualViewport.scale !== 1))
     throw new Error('Desktop is not at normal zoom')
@@ -87,6 +93,7 @@ try {
   await windowAction('Resize', '-Width', '1440', '-Height', '960')
   await page.getByRole('button', { name: 'Show skill preview', exact: true }).click()
   await page.getByRole('button', { name: 'Copy Markdown', exact: true }).click()
+  await windowAction('CheckClipboard')
   await page.getByRole('button', { name: 'Hide skill preview', exact: true }).click()
   const destination = resolve(`test-results/native-export-${Date.now()}.zip`)
   await page.getByRole('button', { name: 'Export package', exact: true }).click()
@@ -94,6 +101,30 @@ try {
   for (let i = 0; i < 100 && !existsSync(destination); i++) await delay(100)
   if (!existsSync(destination) || statSync(destination).size < 100)
     throw new Error('Native save dialog did not produce the ZIP export')
+  await page.getByRole('button', { name: 'Skill Library', exact: true }).click()
+  await page.getByRole('heading', { name: 'Your style library', exact: true }).waitFor()
+  await page
+    .getByRole('button', { name: 'Open Amber botanical study', exact: true })
+    .first()
+    .waitFor()
+  await page.screenshot({ path: 'test-results/desktop-library.png' })
+  await page.getByRole('button', { name: 'Settings & Providers', exact: true }).click()
+  await page.getByRole('heading', { name: 'Settings', exact: true }).waitFor()
+  await page.screenshot({ path: 'test-results/desktop-settings.png' })
+  await page.getByRole('button', { name: 'Daylight', exact: false }).click()
+  await page.waitForFunction(() => document.documentElement.dataset.theme === 'light')
+  await page.screenshot({ path: 'test-results/desktop-settings-light.png' })
+  await page.getByRole('button', { name: 'After hours', exact: false }).click()
+  await page.waitForFunction(() => document.documentElement.dataset.theme === 'dark')
+  await page.getByRole('button', { name: 'AI Generator', exact: true }).click()
+  await page.getByText('Image generation is coming in Phase 2.').waitFor()
+  await page.screenshot({ path: 'test-results/desktop-planned.png' })
+  await page.getByRole('button', { name: 'Skill Library', exact: true }).click()
+  await page
+    .getByRole('button', { name: 'Open Amber botanical study', exact: true })
+    .first()
+    .click()
+  await page.getByLabel('Style name').waitFor()
   const nativeCheck = await page.evaluate(async () => {
     const invoke = window.__TAURI_INTERNALS__.invoke
     const connection = await invoke('backend_connection')
@@ -116,6 +147,8 @@ try {
   await page
     .getByLabel('Description')
     .fill('This unsaved edit must survive a native window close request.')
+  await windowAction('StopService')
+  await delay(500)
   await windowAction('Close')
   await page.getByRole('dialog').waitFor()
   await page.getByRole('button', { name: 'Keep editing', exact: true }).click()
@@ -133,7 +166,9 @@ try {
   } catch (error) {
     if (error.message.includes('remained')) throw error
   }
-  console.log('Tauri native close: unsaved changes guarded and owned sidecar stopped PASS')
+  console.log(
+    'Tauri native close: unsaved changes guarded even after backend failure; discard and owned-process cleanup PASS',
+  )
 } finally {
   await browser?.close().catch(() => {})
   if (app.exitCode === null) app.kill()

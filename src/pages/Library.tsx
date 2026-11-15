@@ -24,6 +24,7 @@ export default function Library({
   onError,
   onNotice,
   onChanged,
+  onDeleted,
 }: {
   version: number
   onNew: () => void
@@ -31,6 +32,7 @@ export default function Library({
   onError: (e: unknown) => void
   onNotice: (s: string) => void
   onChanged: () => void
+  onDeleted: (id: string) => void
 }) {
   const [data, setData] = useState<LibraryResult | null>(null)
   const [query, setQuery] = useState('')
@@ -98,6 +100,7 @@ export default function Library({
     setBusy(true)
     try {
       await api.delete(`/api/skills/${deleting.id}`)
+      onDeleted(deleting.id)
       setDeleting(null)
       onChanged()
       setOffset(0)

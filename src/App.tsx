@@ -18,7 +18,14 @@ import {
 } from 'lucide-react'
 import { MotionConfig } from 'motion/react'
 import { api } from './lib/api'
-import { acceptSave, createDraft, isDirty, markSaved, type Draft } from './lib/editor'
+import {
+  acceptSave,
+  createDraft,
+  discardChanges,
+  isDirty,
+  markSaved,
+  type Draft,
+} from './lib/editor'
 import type { Page, SavedSkill, Settings } from './lib/types'
 import { Button } from './components/ui/button'
 import { Dialog } from './components/ui/dialog'
@@ -58,6 +65,8 @@ export default function App() {
   const [compact, setCompact] = useState(false)
   const [narrow, setNarrow] = useState(() => window.innerWidth <= 1050)
   const [drawer, setDrawer] = useState(false)
+  const [opening, setOpening] = useState(false)
+  const navigation = useRef(0)
   const actionRef = useRef({ newSkill: () => {}, save: () => {}, close: () => {} })
 
   useEffect(() => {
@@ -119,8 +128,12 @@ export default function App() {
         }),
       )
       .then((stop) => {
-        if (active) unlisten = stop
-        else stop()
+        if (active) {
+          unlisten = stop
+          import('@tauri-apps/api/core')
+            .then(({ invoke }) => invoke('register_close_handler'))
+            .catch((e) => setError(String(e)))
+        } else stop()
       })
     return () => {
       active = false
@@ -137,21 +150,34 @@ export default function App() {
     if (isDirty(draft)) setPending(() => action)
     else action()
   }
+  const invalidateOpen = () => {
+    navigation.current++
+    setOpening(false)
+  }
   const newSkill = () =>
     guard(() => {
+      invalidateOpen()
       setDraft(createDraft())
       setPage('studio')
       setDrawer(false)
     })
   const openSkill = (id: string) =>
     guard(() => {
+      const operation = ++navigation.current
+      setOpening(true)
       api
         .get<SavedSkill>(`/api/skills/${id}`)
         .then((saved) => {
+          if (navigation.current !== operation) return
           setDraft(markSaved(draft, saved))
           setPage('studio')
         })
-        .catch(fail)
+        .catch((error) => {
+          if (navigation.current === operation) fail(error)
+        })
+        .finally(() => {
+          if (navigation.current === operation) setOpening(false)
+        })
     })
   const save = async () => {
     if (saving || page !== 'studio') return
@@ -176,25 +202,22 @@ export default function App() {
       }),
   }
 
-  const discard = async () => {
+  const discard = () => {
     const action = pending
-    try {
-      if (draft.revision) {
-        const saved = await api.get<SavedSkill>(`/api/skills/${draft.profile.id}`)
-        setDraft(markSaved(draft, saved))
-      } else setDraft(createDraft())
-      setPending(null)
-      action?.()
-    } catch (e) {
-      fail(e)
-      setPending(null)
-    }
+    setDraft((current) => discardChanges(current))
+    setPending(null)
+    action?.()
   }
 
   const collapsed = (compact || narrow) && !drawer
   const go = (destination: Page) => {
+    if (page === destination) {
+      invalidateOpen()
+      return
+    }
     if (page !== destination)
       guard(() => {
+        invalidateOpen()
         setPage(destination)
         setDrawer(false)
       })
@@ -366,7 +389,7 @@ export default function App() {
                     version={version}
                     onNew={newSkill}
                     onOpen={openSkill}
-                    onLibrary={() => setPage('library')}
+                    onLibrary={() => go('library')}
                     onError={fail}
                   />
                 )}
@@ -378,7 +401,7 @@ export default function App() {
                     onSave={save}
                     saving={saving}
                     settings={settings}
-                    onSettings={() => guard(() => setPage('settings'))}
+                    onSettings={() => go('settings')}
                     onError={fail}
                     onNotice={setNotice}
                     onRestored={(saved) => {
@@ -395,6 +418,10 @@ export default function App() {
                     onError={fail}
                     onNotice={setNotice}
                     onChanged={() => setVersion((v) => v + 1)}
+                    onDeleted={(id) => {
+                      invalidateOpen()
+                      setDraft((current) => (current.profile.id === id ? createDraft() : current))
+                    }}
                   />
                 )}
                 {page === 'settings' && (
@@ -427,6 +454,15 @@ export default function App() {
               <button onClick={() => setNotice('')} aria-label="Dismiss notification">
                 <X size={14} />
               </button>
+            </div>
+          )}
+          {opening && (
+            <div className="opening-status" role="status">
+              <Loader2 size={17} className="spin" />
+              Opening style…
+              <Button size="sm" variant="ghost" onClick={invalidateOpen}>
+                Cancel
+              </Button>
             </div>
           )}
           <Dialog

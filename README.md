@@ -13,6 +13,7 @@ StyleDNA is a local-first desktop workspace for collecting visual references, re
 - Save, search, categorize, tag, favorite, duplicate, delete, and restore saved skill revisions.
 - Preview/copy deterministic `SKILL.md` content; export Markdown, JSON, or portable ZIP packages; import packages under new identities.
 - Dark/light themes, drag-and-drop import, keyboard navigation, progress/cancellation, and unsaved-change navigation protection.
+- A comfortable, spacious studio with adjustable reference/editor panels, a collapsible Markdown preview, grouped sidebar navigation, and expandable advanced controls.
 
 Generation and generated-image history are explicitly marked as Phase 2. Adjustable reference weights, similarity metrics, and LoRA workflows are later work. Prompt instructions are not model training and cannot guarantee exact visual reproduction.
 
@@ -28,6 +29,8 @@ corepack pnpm dev
 
 Open **http://127.0.0.1:1420**. This starts the real backend and frontend together, stores development data in `.styledna-dev/`, and stops the backend when the launcher exits. Running `dev:web` alone only starts Vite; it does not start a backend.
 
+In Windows PowerShell, use `corepack.cmd` in place of `corepack` if script execution policy blocks the PowerShell shim. No execution-policy change is needed.
+
 For the desktop application:
 
 ```sh
@@ -36,6 +39,10 @@ corepack pnpm desktop
 ```
 
 The sidecar packages Python and its runtime libraries. Installed-app users do **not** need Python, Node, or uv. Development does. Rebuild the sidecar after Python changes when testing the desktop host.
+
+![StyleDNA desktop studio](docs/images/studio.png)
+
+Actual Windows desktop workspace using the included, manually authored example reference.
 
 ## Try a reference
 
@@ -57,6 +64,7 @@ uv run ruff check backend scripts
 uv run ruff format --check backend scripts
 corepack pnpm test
 corepack pnpm build
+corepack pnpm format:check
 corepack pnpm exec playwright install chromium
 corepack pnpm test:e2e
 ```
@@ -82,7 +90,7 @@ The authenticated local service binds an ephemeral loopback port. The desktop ho
 
 ## Limits and compatibility
 
-20 references per skill; 20 MiB encoded input and normalized reference limit; 40 megapixels decoded per image; 200 MiB combined image upload; 250 MiB expanded package; 5 GiB managed-asset storage. Animated images are rejected. Inference previews are bounded to 2,048 pixels and thumbnails to 320 pixels. Limits live in `backend/styledna/config.py`.
+20 references per skill; 20 MiB encoded input and normalized reference limit; 40 megapixels decoded per image; 200 MiB combined image upload; 250 MiB expanded package; 5 GiB managed-asset storage. Saving also enforces a package budget with metadata overhead so a skill remains portable. Animated images are rejected. Inference previews are bounded to 2,048 pixels and thumbnails to 320 pixels. Limits live in `backend/styledna/config.py`.
 
 `SKILL.md` uses a conservative name/description frontmatter and relative reference links. The package is portable data, not an executable plugin. Agent-specific installation/loading and generator compatibility have not been certified; review the target agent's current skill conventions before installation. Markdown/JSON exports alone do not contain the reference assets; use ZIP for a self-contained package.
 

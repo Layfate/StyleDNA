@@ -1,6 +1,6 @@
 # StyleDNA UI Redesign Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Deliver the user-requested calm, readable, adjustable desktop UI while preserving real Phase 1 features.
 
@@ -27,25 +27,25 @@
 
 ### Task 1: Editor safety and layout behavior
 **Files:** `src/lib/editor.ts`, `tests/editor.test.ts`, `e2e/workflow.spec.ts`, `e2e/redesign.spec.ts`, `src/components/ResizableWorkspace.tsx`.
-- [ ] Run existing failing snapshot/tag regression tests; implement `acceptSave(current, submitted, saved)` and immediate tag updates.
-- [ ] Define behavioral browser tests for resizers, preview, sidebar, readability, resizing, and actual saved data.
-- [ ] Implement keyboard/pointer split controls with bounded persisted UI preferences; verify tests against real layout.
+- [x] Run existing failing snapshot/tag regression tests; implement `acceptSave(current, submitted, saved)` and immediate tag updates.
+- [x] Define behavioral browser tests for resizers, preview, sidebar, readability, resizing, and actual saved data.
+- [x] Implement keyboard/pointer split controls with bounded persisted UI preferences; verify tests against real layout.
 
 ### Task 2: Studio and shared visual system
 **Files:** `src/styles.css`, `src/components/ui/`, `src/pages/Studio.tsx`, studio subcomponents.
-- [ ] Introduce neutral theme tokens, comfortable type/spacing, accessible tooltips and export menu.
-- [ ] Build visible workflow steps, large reference board, readable review editor with advanced disclosures, and collapsible code panel.
-- [ ] Preserve analysis/apply/cancel, manual editing, preview/copy, revisions, all exports, and reference preview.
+- [x] Introduce neutral theme tokens, comfortable type/spacing, accessible tooltips and export menu.
+- [x] Build visible workflow steps, large reference board, readable review editor with advanced disclosures, and collapsible code panel.
+- [x] Preserve analysis/apply/cancel, manual editing, preview/copy, revisions, all exports, and reference preview.
 
 ### Task 3: Whole-app consistency
 **Files:** `src/App.tsx`, `src/pages/{Dashboard,Library,Settings,Planned}.tsx`.
-- [ ] Group and simplify sidebar, add compact/drawer behavior, keep active page obvious.
-- [ ] Restyle every page and its loading/empty/error states; make headings and controls readable.
-- [ ] Run backend/editor/browser suites, typecheck/build and accessibility checks; inspect screenshots at normal zoom.
+- [x] Group and simplify sidebar, add compact/drawer behavior, keep active page obvious.
+- [x] Restyle every page and its loading/empty/error states; make headings and controls readable.
+- [x] Run backend/editor/browser suites, typecheck/build and accessibility checks; inspect screenshots at normal zoom.
 
 ### Task 4: Native delivery
 **Files:** native config/host as needed, `scripts/smoke-desktop.mjs`, `docs/VERIFICATION.md`, README.
-- [ ] Rebuild and test the actual Tauri/WebView2 UI, scrolling, resizing, saving, exporting boundary and exit lifecycle.
-- [ ] Rebuild `.exe`/`.msi` artifacts, run final checks, document results and unverified platforms, commit changes locally.
+- [x] Rebuild and test the actual Tauri/WebView2 UI, scrolling, resizing, saving, exporting boundary and exit lifecycle.
+- [x] Rebuild `.exe`/`.msi` artifacts, run final checks, document results and unverified platforms, commit changes locally.
 
 Execution is explicitly authorized; do not introduce a further approval handoff. Prior code review reproduced the two data-loss bugs before its agent hit a usage limit. Fix those verified findings; do not claim a completed independent whole-branch review.

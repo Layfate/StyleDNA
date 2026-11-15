@@ -95,3 +95,30 @@ test('studio and settings have accessible names, contrast, and structure', async
   const settings = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze()
   expect(settings.violations).toEqual([])
 })
+
+test('short windows keep analysis actions reachable with options and preview open', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1100, height: 700 })
+  await page.goto('/')
+  await page.getByRole('heading', { name: 'A home for your visual language.' }).waitFor()
+  await page.getByRole('button', { name: 'New skill', exact: true }).click()
+  await page
+    .locator('input[type=file][accept="image/png,image/jpeg,image/webp"]')
+    .setInputFiles('examples/amber-study.png')
+  await page.getByRole('button', { name: 'Analyze references', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Apply analysis', exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Show skill preview', exact: true }).click()
+  await page.locator('.analysis-options > summary').click()
+  await expect(
+    page.getByRole('button', { name: 'Analyze references', exact: true }),
+  ).toBeInViewport({ ratio: 1 })
+  const apply = page.getByRole('button', { name: 'Apply analysis', exact: true })
+  await apply.scrollIntoViewIfNeeded()
+  await expect(apply).toBeInViewport({ ratio: 1 })
+  await apply.click()
+  await expect(page.getByRole('button', { name: 'Save skill', exact: true })).toBeInViewport({
+    ratio: 1,
+  })
+  await page.screenshot({ path: 'test-results/redesign-1100x700.png' })
+})

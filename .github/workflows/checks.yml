@@ -20,6 +20,7 @@ jobs:
       - run: uv run ruff check backend scripts
       - run: uv run ruff format --check backend scripts
       - run: corepack pnpm test
+      - run: corepack pnpm format:check
       - run: corepack pnpm build
       - run: corepack pnpm exec playwright install --with-deps chromium
       - run: corepack pnpm test:e2e

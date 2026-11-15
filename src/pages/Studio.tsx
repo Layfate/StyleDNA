@@ -383,86 +383,94 @@ export default function Studio({
         )}
       </div>
       <div className="analysis-controls">
-        {job && (
-          <div className={`job-status ${job.state}`} role="status">
-            <div className="flex-row between">
-              <strong>{job.state === 'completed' ? 'Your analysis is ready.' : job.stage}</strong>
+        <div
+          className="analysis-detail-scroll"
+          tabIndex={0}
+          aria-label="Analysis progress and options"
+        >
+          {job && (
+            <div className={`job-status ${job.state}`} role="status">
+              <div className="flex-row between">
+                <strong>{job.state === 'completed' ? 'Your analysis is ready.' : job.stage}</strong>
+                {running && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Cancel analysis"
+                    onClick={() =>
+                      api.delete<Job>(`/api/jobs/${job.id}`).then(setJob).catch(onError)
+                    }
+                  >
+                    <Square size={16} />
+                  </Button>
+                )}
+              </div>
               {running && (
+                <div className="progress-track">
+                  <i style={{ width: `${job.progress}%` }} />
+                </div>
+              )}
+              {job.error && <p>{job.error}</p>}
+              {job.state === 'completed' && (
+                <p>
+                  {job.result?.mode === 'measurements'
+                    ? 'Colors and image measurements are ready. Add semantic traits in the editor.'
+                    : 'Review the visual interpretation and keep what fits.'}
+                </p>
+              )}
+              {job.state === 'completed' && job.result && (
                 <Button
-                  variant="ghost"
-                  size="icon"
-                  aria-label="Cancel analysis"
-                  onClick={() => api.delete<Job>(`/api/jobs/${job.id}`).then(setJob).catch(onError)}
+                  variant="secondary"
+                  onClick={() => {
+                    setDraft((current) => applyAnalysis(current, job.result!, job.reference_ids))
+                    setJob(null)
+                    onNotice('Analysis applied. Review your style before saving.')
+                  }}
+                  disabled={saving}
                 >
-                  <Square size={16} />
+                  <Check size={17} />
+                  Apply analysis
                 </Button>
               )}
             </div>
-            {running && (
-              <div className="progress-track">
-                <i style={{ width: `${job.progress}%` }} />
-              </div>
-            )}
-            {job.error && <p>{job.error}</p>}
-            {job.state === 'completed' && (
-              <p>
-                {job.result?.mode === 'measurements'
-                  ? 'Colors and image measurements are ready. Add semantic traits in the editor.'
-                  : 'Review the visual interpretation and keep what fits.'}
+          )}
+          <details className="analysis-options">
+            <summary>
+              <SlidersHorizontal size={16} />
+              <span>
+                {mode === 'measurements'
+                  ? 'Local measurements'
+                  : settings?.ollama_model || 'Ollama vision'}
+                <small>Analysis options</small>
+              </span>
+              <ChevronDown size={16} />
+            </summary>
+            <div>
+              <label className="field">
+                <span>Analysis mode</span>
+                <select
+                  value={mode}
+                  aria-label="Analysis mode"
+                  onChange={(e) => setMode(e.target.value as typeof mode)}
+                  disabled={busy}
+                >
+                  <option value="measurements">Local measurements</option>
+                  <option value="ollama">Ollama vision</option>
+                </select>
+              </label>
+              <p className="field-help">
+                {mode === 'measurements'
+                  ? 'Measure colors and image statistics without AI. Describe visual traits yourself.'
+                  : 'Reference previews are sent to your local Ollama vision model when you start analysis.'}
               </p>
-            )}
-            {job.state === 'completed' && job.result && (
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  setDraft((current) => applyAnalysis(current, job.result!, job.reference_ids))
-                  setJob(null)
-                  onNotice('Analysis applied. Review your style before saving.')
-                }}
-                disabled={saving}
-              >
-                <Check size={17} />
-                Apply analysis
-              </Button>
-            )}
-          </div>
-        )}
-        <details className="analysis-options">
-          <summary>
-            <SlidersHorizontal size={16} />
-            <span>
-              {mode === 'measurements'
-                ? 'Local measurements'
-                : settings?.ollama_model || 'Ollama vision'}
-              <small>Analysis options</small>
-            </span>
-            <ChevronDown size={16} />
-          </summary>
-          <div>
-            <label className="field">
-              <span>Analysis mode</span>
-              <select
-                value={mode}
-                aria-label="Analysis mode"
-                onChange={(e) => setMode(e.target.value as typeof mode)}
-                disabled={busy}
-              >
-                <option value="measurements">Local measurements</option>
-                <option value="ollama">Ollama vision</option>
-              </select>
-            </label>
-            <p className="field-help">
-              {mode === 'measurements'
-                ? 'Measure colors and image statistics without AI. Describe visual traits yourself.'
-                : 'Reference previews are sent to your local Ollama vision model when you start analysis.'}
-            </p>
-            {mode === 'ollama' && !settings?.ollama_model && (
-              <Button variant="secondary" size="sm" onClick={onSettings}>
-                Set up local Ollama
-              </Button>
-            )}
-          </div>
-        </details>
+              {mode === 'ollama' && !settings?.ollama_model && (
+                <Button variant="secondary" size="sm" onClick={onSettings}>
+                  Set up local Ollama
+                </Button>
+              )}
+            </div>
+          </details>
+        </div>
         <Button
           className="analyze-button"
           onClick={analyze}

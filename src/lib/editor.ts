@@ -52,6 +52,10 @@ export function markSaved(_draft: Draft, saved: SavedSkill): Draft {
   }
 }
 
+export function discardChanges(draft: Draft): Draft {
+  return { ...draft, profile: JSON.parse(draft.savedFingerprint) as StyleProfile }
+}
+
 export function acceptSave(current: Draft, submitted: StyleProfile, saved: SavedSkill): Draft {
   if (current.profile.id !== submitted.id) return current
   if (fingerprint(current.profile) === fingerprint(submitted)) return markSaved(current, saved)

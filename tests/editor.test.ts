@@ -1,8 +1,28 @@
 import { describe, expect, it } from 'vitest'
-import { acceptSave, applyAnalysis, createDraft, isDirty, markSaved } from '../src/lib/editor'
+import {
+  acceptSave,
+  applyAnalysis,
+  createDraft,
+  discardChanges,
+  isDirty,
+  markSaved,
+} from '../src/lib/editor'
 import type { AnalysisResult } from '../src/lib/types'
 
 describe('editor draft ownership', () => {
+  it('discards from the saved snapshot without needing a service read', () => {
+    const initial = createDraft()
+    const saved = markSaved(initial, {
+      profile: { ...initial.profile, name: 'Saved state' },
+      revision: 1,
+      markdown: '# Saved state',
+    })
+    const edited = { ...saved, profile: { ...saved.profile, name: 'Unsaved edits' } }
+    const restored = discardChanges(edited)
+    expect(restored.profile.name).toBe('Saved state')
+    expect(isDirty(restored)).toBe(false)
+    expect(restored.revision).toBe(1)
+  })
   it('distinguishes unsaved new work from a saved revision', () => {
     const draft = createDraft()
     expect(isDirty(draft)).toBe(false)

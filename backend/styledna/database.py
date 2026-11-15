@@ -9,6 +9,7 @@ from uuid import uuid4
 
 from .assets import AssetStore
 from .compiler import compile_skill
+from .config import MAX_PACKAGE_BYTES
 from .models import StyleProfile, now
 
 
@@ -91,12 +92,18 @@ class Library:
             actual = current["revision"] if current else 0
             if actual != expected_revision:
                 raise ConflictError("This skill changed or was deleted. Reload it before saving.")
-            for ref_id in profile.reference_ids:
-                self.assets.get(ref_id)
+            reference_bytes = sum(self.assets.get(ref_id).bytes for ref_id in profile.reference_ids)
             profile.updated_at = now()
             profile.created_at = json.loads(current["profile"])["created_at"] if current else now()
             payload = profile.model_dump_json()
             markdown = compile_skill(profile)
+            # Reserve bounded manifest/ZIP overhead so every accepted revision can be backed up.
+            package_bytes = reference_bytes + len(profile.model_dump_json(indent=2).encode("utf-8"))
+            package_bytes += len(markdown.encode("utf-8")) + 64_000
+            if package_bytes > MAX_PACKAGE_BYTES:
+                raise ValueError(
+                    "This style exceeds the portable package budget. Remove or resize references before saving."
+                )
             revision = actual + 1
             search = " ".join(
                 [profile.name, profile.description, profile.category, *profile.tags]

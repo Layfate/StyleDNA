@@ -114,3 +114,60 @@ test('keyboard save includes tags still being typed', async ({ page }) => {
     .click()
   await expect(tags).toHaveValue('organic, warm')
 })
+
+test('a delayed library open never replaces a newer studio draft', async ({ page }) => {
+  const name = `Delayed open ${Date.now()}`
+  await page.goto('/')
+  await page.getByRole('button', { name: 'New skill', exact: true }).click()
+  await page.getByLabel('Style name').fill(name)
+  await page.getByRole('button', { name: 'Save skill', exact: true }).click()
+  await expect(page.getByText('Revision 1', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Skill Library', exact: true }).click()
+  await page.getByLabel('Search skills').fill(name)
+  let release: () => void = () => {}
+  const released = new Promise<void>((resolve) => {
+    release = resolve
+  })
+  const pending = page.waitForRequest((request) =>
+    /\/api\/skills\/[a-f0-9]{32}$/.test(request.url()),
+  )
+  await page.route(/\/api\/skills\/[a-f0-9]{32}$/, async (route) => {
+    const response = await route.fetch()
+    await released
+    await route.fulfill({ response })
+  })
+  await page.getByRole('button', { name: `Open ${name}`, exact: true }).click()
+  await pending
+  await page.getByRole('button', { name: 'New skill', exact: true }).click()
+  await page.getByLabel('Style name').fill('Keep this newer draft')
+  const completion = page.waitForResponse((response) =>
+    /\/api\/skills\/[a-f0-9]{32}$/.test(response.url()),
+  )
+  release()
+  await completion
+  await page.waitForTimeout(100)
+  await expect(page.getByLabel('Style name')).toHaveValue('Keep this newer draft')
+})
+
+test('a deleted retained skill can still be discarded and replaced with new work', async ({
+  page,
+}) => {
+  const name = `Deleted draft ${Date.now()}`
+  await page.goto('/')
+  await page.getByRole('button', { name: 'New skill', exact: true }).click()
+  await page.getByLabel('Style name').fill(name)
+  await page.getByRole('button', { name: 'Save skill', exact: true }).click()
+  await expect(page.getByText('Revision 1', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Skill Library', exact: true }).click()
+  await page.getByLabel('Search skills').fill(name)
+  await page.getByRole('button', { name: `Delete ${name}`, exact: true }).click()
+  await page.getByRole('button', { name: 'Delete style', exact: true }).click()
+  await expect(page.getByRole('button', { name: `Open ${name}`, exact: true })).toHaveCount(0)
+  await page.getByRole('button', { name: 'Image-to-Skill', exact: true }).click()
+  await page.getByLabel('Description').fill('Unsaved changes to a deleted identity')
+  await page.getByRole('button', { name: 'New skill', exact: true }).click()
+  if (await page.getByRole('dialog').count())
+    await page.getByRole('button', { name: 'Discard changes', exact: true }).click()
+  await expect(page.getByLabel('Style name')).toHaveValue('Untitled style')
+  await expect(page.getByRole('dialog')).toHaveCount(0)
+})

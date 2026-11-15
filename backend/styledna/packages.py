@@ -49,12 +49,26 @@ def export_package(
         ]
     )
     out = io.BytesIO()
+    metadata = {
+        "manifest.json": manifest.model_dump_json(indent=2),
+        "style.json": p.model_dump_json(indent=2),
+        "SKILL.md": saved["markdown"],
+    }
+    expanded = sum(len(value.encode("utf-8")) for value in metadata.values())
+    expanded += sum(assets.path(ref.id).stat().st_size for ref in manifest.assets)
+    if expanded + 64_000 > MAX_PACKAGE_BYTES:
+        raise PackageError(
+            "This style exceeds the portable package budget. Remove or resize references before exporting."
+        )
     with zipfile.ZipFile(out, "w", compression=zipfile.ZIP_DEFLATED) as z:
-        z.writestr("manifest.json", manifest.model_dump_json(indent=2))
-        z.writestr("style.json", p.model_dump_json(indent=2))
-        z.writestr("SKILL.md", saved["markdown"])
+        for name, content in metadata.items():
+            z.writestr(name, content)
         for ref in manifest.assets:
             z.write(assets.path(ref.id), ref.path)
+    if out.tell() > MAX_PACKAGE_BYTES:
+        raise PackageError(
+            "Encoded package exceeds the portable package budget. Resize references and retry."
+        )
     return out.getvalue()
 
 
