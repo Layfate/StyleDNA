@@ -15,8 +15,8 @@
 - [x] Center and enlarge the original transparent logo, title, tagline, checks badge, and navigation in the README. Verify the rendered HTML and image URL.
 - [x] Confirm the existing package provenance, hashes, successful build jobs, and current application checks. No application changes or replacement artwork are needed.
 - [x] Update release documentation and notes consistently with the chosen release status. Preserve the original preview and the exact binary source record if a main release is created.
-- [ ] Review the documentation and publication changes, push the README, and wait for the exact documentation commit's GitHub checks.
-- [ ] Publish/update the release requested by the user and verify public downloads, manifests, release status, and repository state.
+- [x] Review the documentation and publication changes, push the README, and wait for the exact documentation commit's GitHub checks.
+- [x] Publish/update the release requested by the user and verify public downloads, manifests, release status, and repository state.
 
 ## Transfer adjustment
 
