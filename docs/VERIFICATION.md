@@ -2,6 +2,12 @@
 
 Host: Windows x64, 2026-11-15 (Asia/Manila). Node 24.21.0, Python 3.12.10, Rust 1.100.0, pnpm 12.21.0, uv 0.12.19.
 
+## README and main release follow-up
+
+Version [0.1.2](https://github.com/Layfate/StyleDNA/releases/tag/v0.1.2) promotes the seven previously verified preview packages without changing their bytes or application source. Both release tags target `d4f675769688e3d15b79954f1178c6a423fccf8f`; the original preview remains available. `BUILD_ARTIFACTS.json` and the new release manifest identify the main release and retain the original source commit, successful platform run, package sizes, and SHA-256 hashes. Documentation and the README header are updated separately on `main`.
+
+The original logo bitmap is unchanged; GitHub's Markdown renderer retained its new centered 200 × 200 display and centered heading, and a headless-browser check confirmed the logo dimensions and alignment. Fresh local checks passed 40 backend tests, five editor tests, Ruff lint, the TypeScript/Vite production build, and Prettier formatting. All seven existing local packages were rehashed against the tracked CI build manifest before publication. A fresh read-only review found no blocking defects; its CI-link attribution correction was applied to the release notes. The platform and signing limits recorded below remain in effect.
+
 ## Public preview release validation
 
 The repository is now public at [Layfate/StyleDNA](https://github.com/Layfate/StyleDNA). [GitHub Checks](https://github.com/Layfate/StyleDNA/actions/runs/43696211835) and [all three platform jobs](https://github.com/Layfate/StyleDNA/actions/runs/43696212373) passed for release source commit `d4f6757`. Release hardening changes affect verification scripts and documentation; the application remains version 0.1.2.

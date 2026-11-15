@@ -1,6 +1,6 @@
 {
   "version": "0.1.2",
-  "tag": "v0.1.2-preview.1",
+  "tag": "v0.1.2",
   "source_commit": "d4f675769688e3d15b79954f1178c6a423fccf8f",
   "build_run": "https://github.com/Layfate/StyleDNA/actions/runs/43696212373",
   "signed_by_trusted_publisher": false,

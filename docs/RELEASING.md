@@ -2,12 +2,14 @@
 
 The public repository is [Layfate/StyleDNA](https://github.com/Layfate/StyleDNA). StyleDNA creates reusable style skills from images. Installers bundle the Python service; end users do not install Node, Python, Rust, or uv.
 
-## Preview downloads
+## Downloads
 
-Use the files attached to a [GitHub release](https://github.com/Layfate/StyleDNA/releases), rather than the source-code ZIP, to install the app. Preview installers are **unsigned**. The maintainer currently has no Windows signing certificate or Apple Developer account; no trusted signing or Apple notarization is claimed.
+Use the files attached to the [latest GitHub release](https://github.com/Layfate/StyleDNA/releases/latest), rather than the source-code ZIP, to install the app. Version [0.1.2](https://github.com/Layfate/StyleDNA/releases/tag/v0.1.2) publishes the same verified packages as the original [0.1.2 preview](https://github.com/Layfate/StyleDNA/releases/tag/v0.1.2-preview.1); no application code or binaries changed during this documentation and release update. Both tags target binary source commit `d4f675769688e3d15b79954f1178c6a423fccf8f`. The README improvements are published separately on `main`.
+
+Installers are **unsigned**. The maintainer currently has no Windows signing certificate or Apple Developer account; no trusted signing or Apple notarization is claimed.
 
 - Windows x64: choose `-setup.exe` for a per-user install or `.msi` for a managed machine install. WebView2 is required; the installers can bootstrap it when missing. Review the release checksums before installing.
-- macOS: choose the archive/DMG matching your processor. Preview applications have no Developer ID signature or notarization and may be blocked by Gatekeeper. Do not disable Gatekeeper globally. Source builds are an alternative for developers.
+- macOS Apple Silicon: choose the ARM64 archive/DMG. Intel Mac installers are not included. Applications have no Developer ID signature or notarization and may be blocked by Gatekeeper. Do not disable Gatekeeper globally. Source builds are an alternative for developers.
 - Linux x64: choose the Debian, RPM, or AppImage package appropriate for your distribution. Ubuntu 24.04 is the CI build baseline; compatible WebKitGTK 4.1 system libraries are required.
 
 The release's `SHA256SUMS.txt` verifies file integrity, not publisher identity. On Windows, use `Get-FileHash <download> -Algorithm SHA256`; on macOS use `shasum -a 256 <download>`; on Linux use `sha256sum -c SHA256SUMS.txt` beside all downloaded files.
@@ -19,7 +21,7 @@ The release's `SHA256SUMS.txt` verifies file integrity, not publisher identity. 
 3. Each platform builds its own bundled service and native application. Its standalone smoke runs real reference import, numerical analysis, package import, and parent-pipe shutdown, with the working directory outside the checkout.
 4. Windows installs both MSI and NSIS on a disposable Windows Server 2022 hosted runner. Each installed app exercises the real desktop workflow, native export, clipboard, sizing, and unsaved-close recovery. It then uninstalls and checks the default library and references against their pre-uninstall hashes. Both roaming/local application-data sentinels must survive. Self-hosted runners and existing default StyleDNA data directories are rejected.
 5. macOS checks the service embedded inside the `.app`. Linux installs the `.deb`, runs the installed service, and removes the package. DMG, RPM, and AppImage builds are also required to succeed.
-6. Download artifacts only from successful jobs for the exact intended commit. Compute SHA-256 checksums, create a preview release targeting that commit, and upload the packages plus manifest. Do not relabel an unsigned build as signed.
+6. Download artifacts only from successful jobs for the exact intended commit. Compute SHA-256 checksums, create a release targeting that commit, and upload the packages plus manifest. Mark experimental releases as prereleases. A documentation-only promotion may reuse the exact verified binaries and source tag; disclose that reuse in the release notes and preserve their build provenance. Do not relabel an unsigned build as signed.
 
 Hosted runners are fresh CI environments with preinstalled system components. These checks do not establish behavior on every retail Windows/macOS/Linux installation. Windows installer bootstrapping without an existing WebView2 runtime and macOS/Linux UI behavior require separate machine testing.
 
