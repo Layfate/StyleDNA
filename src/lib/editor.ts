@@ -1,16 +1,40 @@
-import { traitLabels, type AnalysisResult, type SavedSkill, type StyleProfile, type TraitKey } from './types'
+import {
+  traitLabels,
+  type AnalysisResult,
+  type SavedSkill,
+  type StyleProfile,
+  type TraitKey,
+} from './types'
 
-export type Draft = { profile: StyleProfile; revision: number; savedFingerprint: string; markdown: string }
+export type Draft = {
+  profile: StyleProfile
+  revision: number
+  savedFingerprint: string
+  markdown: string
+}
 export const fingerprint = (profile: StyleProfile) => JSON.stringify(profile)
 
 export function createDraft(): Draft {
   const timestamp = new Date().toISOString()
   const profile: StyleProfile = {
-    schema_version: 1, id: crypto.randomUUID().replaceAll('-', ''), name: 'Untitled style', description: '',
-    category: 'Uncategorized', tags: [], favorite: false, palette: [], reference_ids: [], analysis: null,
-    positive_rules: [], negative_constraints: [], subject_exclusions: [], created_at: timestamp,
-    updated_at: timestamp, traits: Object.fromEntries(Object.keys(traitLabels).map(k =>
-      [k, { value: '', source: 'user' }])) as StyleProfile['traits'],
+    schema_version: 1,
+    id: crypto.randomUUID().replaceAll('-', ''),
+    name: 'Untitled style',
+    description: '',
+    category: 'Uncategorized',
+    tags: [],
+    favorite: false,
+    palette: [],
+    reference_ids: [],
+    analysis: null,
+    positive_rules: [],
+    negative_constraints: [],
+    subject_exclusions: [],
+    created_at: timestamp,
+    updated_at: timestamp,
+    traits: Object.fromEntries(
+      Object.keys(traitLabels).map((k) => [k, { value: '', source: 'user' }]),
+    ) as StyleProfile['traits'],
   }
   return { profile, revision: 0, savedFingerprint: fingerprint(profile), markdown: '' }
 }
@@ -20,8 +44,28 @@ export function isDirty(draft: Draft): boolean {
 }
 
 export function markSaved(_draft: Draft, saved: SavedSkill): Draft {
-  return { profile: saved.profile, revision: saved.revision,
-    savedFingerprint: fingerprint(saved.profile), markdown: saved.markdown }
+  return {
+    profile: saved.profile,
+    revision: saved.revision,
+    savedFingerprint: fingerprint(saved.profile),
+    markdown: saved.markdown,
+  }
+}
+
+export function acceptSave(current: Draft, submitted: StyleProfile, saved: SavedSkill): Draft {
+  if (current.profile.id !== submitted.id) return current
+  if (fingerprint(current.profile) === fingerprint(submitted)) return markSaved(current, saved)
+  return {
+    ...current,
+    profile: {
+      ...current.profile,
+      created_at: saved.profile.created_at,
+      updated_at: saved.profile.updated_at,
+    },
+    revision: saved.revision,
+    savedFingerprint: fingerprint(saved.profile),
+    markdown: saved.markdown,
+  }
 }
 
 export function applyAnalysis(draft: Draft, result: AnalysisResult, inputIds: string[]): Draft {

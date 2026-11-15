@@ -10,17 +10,35 @@
     "frontendDist": "../dist"
   },
   "app": {
-    "windows": [{ "label": "main", "title": "StyleDNA", "width": 1440, "height": 940,
-      "minWidth": 1000, "minHeight": 720, "backgroundColor": "#171715", "dragDropEnabled": false }],
+    "windows": [
+      {
+        "label": "main",
+        "title": "StyleDNA",
+        "width": 1440,
+        "height": 940,
+        "minWidth": 900,
+        "minHeight": 700,
+        "backgroundColor": "#171715",
+        "dragDropEnabled": false
+      }
+    ],
     "security": {
       "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; connect-src 'self' ipc: http://ipc.localhost http://127.0.0.1:*; font-src 'self'; object-src 'none'; base-uri 'self'; frame-src 'none'"
     }
   },
   "bundle": {
-    "active": true, "targets": "all", "category": "GraphicsAndDesign",
+    "active": true,
+    "targets": "all",
+    "category": "GraphicsAndDesign",
     "shortDescription": "Turn images into reusable AI style skills",
     "externalBin": ["binaries/styledna-service"],
-    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.ico", "icons/icon.icns"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.ico",
+      "icons/icon.icns"
+    ],
     "windows": { "nsis": { "displayLanguageSelector": false } },
     "macOS": { "minimumSystemVersion": "12.0" }
   }

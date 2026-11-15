@@ -11,10 +11,27 @@ const host = spawnSync('rustc', ['-vV'], { encoding: 'utf8', windowsHide: true }
 if (host.status !== 0) throw new Error('Rust is required to determine the sidecar target')
 const target = host.stdout.match(/^host: (.+)$/m)?.[1]?.trim()
 if (!target) throw new Error('Could not determine native build target')
-run('uv', ['run', 'pyinstaller', '--noconfirm', '--clean', '--onefile', '--noupx',
-  '--name', 'styledna-service', '--paths', 'backend', '--collect-submodules', 'uvicorn',
-  '--distpath', 'build/sidecar', '--workpath', 'build/pyinstaller', '--specpath', 'build',
-  'scripts/sidecar-entry.py'])
+run('uv', [
+  'run',
+  'pyinstaller',
+  '--noconfirm',
+  '--clean',
+  '--onefile',
+  '--noupx',
+  '--name',
+  'styledna-service',
+  '--paths',
+  'backend',
+  '--collect-submodules',
+  'uvicorn',
+  '--distpath',
+  'build/sidecar',
+  '--workpath',
+  'build/pyinstaller',
+  '--specpath',
+  'build',
+  'scripts/sidecar-entry.py',
+])
 mkdirSync('src-tauri/binaries', { recursive: true })
 const suffix = process.platform === 'win32' ? '.exe' : ''
 const destination = resolve(`src-tauri/binaries/styledna-service-${target}${suffix}`)

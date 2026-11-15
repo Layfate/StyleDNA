@@ -4,7 +4,9 @@ import { test, expect } from '@playwright/test'
 test('import, measure, edit, persist, export and reimport a real skill', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: 'New skill', exact: true }).click()
-  await page.locator('input[type=file][accept="image/png,image/jpeg,image/webp"]').setInputFiles('examples/amber-study.png')
+  await page
+    .locator('input[type=file][accept="image/png,image/jpeg,image/webp"]')
+    .setInputFiles('examples/amber-study.png')
   await expect(page.getByText('amber-study.png', { exact: true })).toBeVisible()
   await page.getByRole('button', { name: 'Analyze references', exact: true }).click()
   await expect(page.getByRole('button', { name: 'Apply analysis', exact: true })).toBeVisible()
@@ -17,7 +19,9 @@ test('import, measure, edit, persist, export and reimport a real skill', async (
   await page.getByRole('button', { name: 'Skill Library', exact: true }).click()
   await page.getByLabel('Search skills').fill('Amber study E2E')
   await page.getByRole('button', { name: 'Open Amber study E2E' }).first().click()
-  await expect(page.getByLabel('Lighting & shadows')).toHaveValue('Soft ambient light and broad, gentle shadows.')
+  await expect(page.getByLabel('Lighting & shadows')).toHaveValue(
+    'Soft ambient light and broad, gentle shadows.',
+  )
   await page.reload()
   await page.getByRole('button', { name: 'Skill Library', exact: true }).click()
   await page.getByLabel('Search skills').fill('Amber study E2E')
@@ -46,7 +50,67 @@ test('unsaved navigation is guarded and unavailable features are disclosed', asy
   await expect(page.getByText('Image generation is coming in Phase 2.')).toBeVisible()
 })
 
-test('development proxy refuses hostile origins before adding authorization', async ({ request }) => {
+test('development proxy refuses hostile origins before adding authorization', async ({
+  request,
+}) => {
   const response = await request.get('/api/skills', { headers: { Origin: 'https://evil.example' } })
   expect(response.status()).toBe(403)
+})
+
+test('revision restore, favorites, duplicate, delete and theme persistence use real data', async ({
+  page,
+}) => {
+  const name = `Library actions ${Date.now()}`
+  await page.goto('/')
+  await page.getByRole('button', { name: 'New skill', exact: true }).click()
+  await page.getByLabel('Style name').fill(name)
+  await page.getByRole('button', { name: 'Save skill', exact: true }).click()
+  await expect(page.getByText('Revision 1', { exact: true })).toBeVisible()
+  await page.getByLabel('Description').fill('A second revision to restore away.')
+  await page.getByRole('button', { name: 'Save skill', exact: true }).click()
+  await expect(page.getByText('Revision 2', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Version history', exact: true }).click()
+  await page.getByRole('button', { name: 'Restore revision 1', exact: true }).click()
+  await expect(page.getByLabel('Description')).toHaveValue('')
+  await expect(page.getByText('Revision 3', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Skill Library', exact: true }).click()
+  await page.getByLabel('Search skills').fill(name)
+  await page.getByRole('button', { name: `Favorite ${name}`, exact: true }).click()
+  await expect(page.getByRole('button', { name: `Unfavorite ${name}`, exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Duplicate', exact: true }).click()
+  await expect(page.getByRole('button', { name: `Open ${name} (copy)`, exact: true })).toBeVisible()
+  await page.getByRole('button', { name: `Delete ${name} (copy)`, exact: true }).click()
+  await page.getByRole('button', { name: 'Delete style', exact: true }).click()
+  await expect(page.getByRole('button', { name: `Open ${name} (copy)`, exact: true })).toHaveCount(
+    0,
+  )
+  await expect(page.getByRole('button', { name: `Open ${name}`, exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Settings & Providers', exact: true }).click()
+  await page.getByRole('button', { name: 'Daylight', exact: false }).click()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+  await page.reload()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+  await page.getByRole('button', { name: 'Settings & Providers', exact: true }).click()
+  await page.getByRole('button', { name: 'After hours', exact: false }).click()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+})
+
+test('keyboard save includes tags still being typed', async ({ page }) => {
+  const name = `Save protection ${Date.now()}`
+  await page.goto('/')
+  await page.getByRole('button', { name: 'New skill', exact: true }).click()
+  await page.getByLabel('Style name').fill(name)
+  const tags = page.getByLabel('Tags', { exact: false })
+  await page.getByText('Organize this skill', { exact: false }).click()
+  await tags.fill('organic, warm')
+  await page.keyboard.press('Control+s')
+  await expect(page.getByText('Revision 1', { exact: true })).toBeVisible()
+  await expect(tags).toHaveValue('organic, warm')
+  await page.getByRole('button', { name: 'Skill Library', exact: true }).click()
+  await page.getByLabel('Search skills').fill(name)
+  await page
+    .getByRole('button', { name: /Open Save protection/ })
+    .first()
+    .click()
+  await expect(tags).toHaveValue('organic, warm')
 })

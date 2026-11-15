@@ -12,7 +12,9 @@ async function getConnection(): Promise<Connection> {
       }
       return { url: '', token: '' } // The development proxy authenticates server-side.
     })()
-    connection.catch(() => { connection = undefined })
+    connection.catch(() => {
+      connection = undefined
+    })
   }
   return connection
 }
@@ -27,7 +29,9 @@ export async function request(path: string, init: RequestInit = {}): Promise<Res
     response = await fetch(url + path, { ...init, headers })
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') throw error
-    throw new Error('The local service is unavailable. Restart StyleDNA or the development launcher.')
+    throw new Error(
+      'The local service is unavailable. Restart StyleDNA or the development launcher.',
+    )
   }
   if (!response.ok) {
     const detail = await response.json().catch(() => null)
@@ -37,7 +41,8 @@ export async function request(path: string, init: RequestInit = {}): Promise<Res
 }
 
 export const api = {
-  get: async <T>(path: string, signal?: AbortSignal): Promise<T> => (await request(path, { signal })).json(),
+  get: async <T>(path: string, signal?: AbortSignal): Promise<T> =>
+    (await request(path, { signal })).json(),
   post: async <T>(path: string, data: unknown = {}): Promise<T> =>
     (await request(path, { method: 'POST', body: JSON.stringify(data) })).json(),
   put: async <T>(path: string, data: unknown): Promise<T> =>
