@@ -1,0 +1,92 @@
+name: Stage verified release assets
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_tag:
+        description: Existing release whose verified packages should be reused
+        required: true
+        default: v0.1.2-preview.1
+
+permissions:
+  contents: write
+
+jobs:
+  stage:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      SOURCE_TAG: ${{ inputs.source_tag }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Download, verify, and stage unchanged packages in the draft release
+        shell: python
+        run: |
+          import hashlib
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          def gh(*args):
+              return subprocess.check_output(['gh', *args], text=True)
+
+          expected = json.loads(Path('docs/BUILD_ARTIFACTS.json').read_text())
+          source_tag = os.environ['SOURCE_TAG']
+          target_tag = expected['tag']
+          assert source_tag != target_tag, 'Source and target releases must differ'
+          source = json.loads(gh('release', 'view', source_tag, '--json', 'isDraft,assets'))
+          target = json.loads(gh('release', 'view', target_tag, '--json', 'isDraft,assets'))
+          assert not source['isDraft'], 'Source must be a published release'
+          assert target['isDraft'], 'Only draft release assets may be staged'
+          ref = json.loads(gh('api', f'repos/{os.environ["GH_REPO"]}/git/ref/tags/{source_tag}'))
+          assert ref['object']['sha'] == expected['source_commit'], 'Source tag differs from build record'
+
+          folder = Path('staged-release')
+          subprocess.run(['gh', 'release', 'download', source_tag, '--dir', str(folder)], check=True)
+          previous = json.loads((folder / 'release-manifest.json').read_text())
+          assert previous['tag'] == source_tag
+          assert {k: v for k, v in previous.items() if k != 'tag'} == {
+              k: v for k, v in expected.items() if k != 'tag'
+          }, 'Source manifest differs from the verified build record'
+
+          files = []
+          for item in expected['installers']:
+              filename = item['file']
+              assert Path(filename).name == filename and '/' not in filename and '\\' not in filename
+              package = folder / filename
+              assert package.stat().st_size == item['bytes'], filename
+              with package.open('rb') as stream:
+                  assert hashlib.file_digest(stream, 'sha256').hexdigest() == item['sha256'], filename
+              files.append(package)
+          assert len(files) == 7
+          manifest = folder / 'release-manifest.json'
+          manifest.write_text(json.dumps(expected, indent=2) + '\n')
+          checksums = folder / 'SHA256SUMS.txt'
+          checksums.write_text(''.join(f"{i['sha256']}  {i['file']}\n" for i in expected['installers']))
+          files += [manifest, checksums]
+
+          # Preserve completed uploads; refuse to overwrite different or incomplete content.
+          existing = {a['name']: a for a in target['assets']}
+          assert set(existing).issubset({p.name for p in files}), 'Unexpected draft assets'
+          verified = {}
+          for file in files:
+              with file.open('rb') as stream:
+                  digest = 'sha256:' + hashlib.file_digest(stream, 'sha256').hexdigest()
+              verified[file.name] = (file.stat().st_size, digest)
+              if file.name in existing:
+                  asset = existing[file.name]
+                  assert asset['state'] == 'uploaded' and asset['size'] == file.stat().st_size
+                  assert asset['digest'] == digest, 'Existing draft asset differs: ' + file.name
+              else:
+                  subprocess.run(['gh', 'release', 'upload', target_tag, str(file)], check=True)
+              print('Verified and staged:', file.name, flush=True)
+
+          final = json.loads(gh('release', 'view', target_tag, '--json', 'isDraft,assets'))
+          assert final['isDraft'] and len(final['assets']) == len(files)
+          for asset in final['assets']:
+              assert asset['state'] == 'uploaded'
+              assert (asset['size'], asset['digest']) == verified[asset['name']]
+          print('All nine assets staged. Publication requires a separate explicit step.')

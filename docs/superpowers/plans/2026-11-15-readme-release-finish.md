@@ -18,6 +18,10 @@
 - [ ] Review the documentation and publication changes, push the README, and wait for the exact documentation commit's GitHub checks.
 - [ ] Publish/update the release requested by the user and verify public downloads, manifests, release status, and repository state.
 
+## Transfer adjustment
+
+The local upload progressed too slowly to complete promptly and was stopped with the empty draft retained. Stage the existing verified preview assets from a GitHub-hosted runner instead. The manual staging workflow must check the source tag, complete manifest, package sizes/hashes, and resulting draft assets; it must not publish or overwrite mismatched content.
+
 ## Review focus
 
 - GitHub supports the header markup, the image remains relative to the repository, and the original bitmap is unchanged.

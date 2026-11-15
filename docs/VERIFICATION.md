@@ -8,6 +8,8 @@ Version [0.1.2](https://github.com/Layfate/StyleDNA/releases/tag/v0.1.2) promote
 
 The original logo bitmap is unchanged; GitHub's Markdown renderer retained its new centered 200 × 200 display and centered heading, and a headless-browser check confirmed the logo dimensions and alignment. Fresh local checks passed 40 backend tests, five editor tests, Ruff lint, the TypeScript/Vite production build, and Prettier formatting. All seven existing local packages were rehashed against the tracked CI build manifest before publication. A fresh read-only review found no blocking defects; its CI-link attribution correction was applied to the release notes. The platform and signing limits recorded below remain in effect.
 
+The README and download-documentation commit `0b60bfe` passed the [complete GitHub Checks workflow](https://github.com/Layfate/StyleDNA/actions/runs/43715538064), including the real-backend browser suite. A slow local asset transfer was stopped before any files completed; the draft was retained. The manually dispatched staging workflow transfers the already verified packages between releases on a hosted runner, preserving their bytes and original build provenance.
+
 ## Public preview release validation
 
 The repository is now public at [Layfate/StyleDNA](https://github.com/Layfate/StyleDNA). [GitHub Checks](https://github.com/Layfate/StyleDNA/actions/runs/43696211835) and [all three platform jobs](https://github.com/Layfate/StyleDNA/actions/runs/43696212373) passed for release source commit `d4f6757`. Release hardening changes affect verification scripts and documentation; the application remains version 0.1.2.
