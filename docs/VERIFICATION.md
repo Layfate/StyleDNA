@@ -12,6 +12,8 @@ The README and download-documentation commit `0b60bfe` passed the [complete GitH
 
 The [hosted staging run](https://github.com/Layfate/StyleDNA/actions/runs/43716111237) and its [exact-commit Checks run](https://github.com/Layfate/StyleDNA/actions/runs/43716109325) both passed for `7a34e59`. Final publication verification confirmed `v0.1.2` is public, is not a prerelease, and is GitHub's latest release; the original preview is retained. All nine uploaded file sizes and SHA-256 digests matched the expected files. Anonymous requests verified the release/latest pages, all seven installer downloads, both manifests, and the unchanged logo at the exact binary source commit.
 
+The standalone `SHA256SUMS.txt` and `release-manifest.json` attachments were subsequently removed from `v0.1.2` at the user's request. The release now contains only the seven platform packages. Package hashes and build provenance remain in the repository's `BUILD_ARTIFACTS.json`. The installer files are unchanged; the earlier nine-file verification records the original publication state.
+
 ## Public preview release validation
 
 The repository is now public at [Layfate/StyleDNA](https://github.com/Layfate/StyleDNA). [GitHub Checks](https://github.com/Layfate/StyleDNA/actions/runs/43696211835) and [all three platform jobs](https://github.com/Layfate/StyleDNA/actions/runs/43696212373) passed for release source commit `d4f6757`. Release hardening changes affect verification scripts and documentation; the application remains version 0.1.2.

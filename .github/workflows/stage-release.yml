@@ -46,11 +46,13 @@ jobs:
 
           folder = Path('staged-release')
           subprocess.run(['gh', 'release', 'download', source_tag, '--dir', str(folder)], check=True)
-          previous = json.loads((folder / 'release-manifest.json').read_text())
-          assert previous['tag'] == source_tag
-          assert {k: v for k, v in previous.items() if k != 'tag'} == {
-              k: v for k, v in expected.items() if k != 'tag'
-          }, 'Source manifest differs from the verified build record'
+          source_manifest = folder / 'release-manifest.json'
+          if source_manifest.exists():
+              previous = json.loads(source_manifest.read_text())
+              assert previous['tag'] == source_tag
+              assert {k: v for k, v in previous.items() if k != 'tag'} == {
+                  k: v for k, v in expected.items() if k != 'tag'
+              }, 'Source manifest differs from the verified build record'
 
           files = []
           for item in expected['installers']:
@@ -62,11 +64,6 @@ jobs:
                   assert hashlib.file_digest(stream, 'sha256').hexdigest() == item['sha256'], filename
               files.append(package)
           assert len(files) == 7
-          manifest = folder / 'release-manifest.json'
-          manifest.write_text(json.dumps(expected, indent=2) + '\n')
-          checksums = folder / 'SHA256SUMS.txt'
-          checksums.write_text(''.join(f"{i['sha256']}  {i['file']}\n" for i in expected['installers']))
-          files += [manifest, checksums]
 
           # Preserve completed uploads; refuse to overwrite different or incomplete content.
           existing = {a['name']: a for a in target['assets']}
@@ -89,4 +86,4 @@ jobs:
           for asset in final['assets']:
               assert asset['state'] == 'uploaded'
               assert (asset['size'], asset['digest']) == verified[asset['name']]
-          print('All nine assets staged. Publication requires a separate explicit step.')
+          print('All seven platform packages staged. Publication requires a separate explicit step.')

@@ -24,7 +24,7 @@
 | macOS Apple Silicon | [DMG](https://github.com/Layfate/StyleDNA/releases/download/v0.1.2/StyleDNA_0.1.2_aarch64.dmg) · [App ZIP](https://github.com/Layfate/StyleDNA/releases/download/v0.1.2/StyleDNA.app.zip) |
 | Linux x64 | [AppImage](https://github.com/Layfate/StyleDNA/releases/download/v0.1.2/StyleDNA_0.1.2_amd64.AppImage) · [DEB](https://github.com/Layfate/StyleDNA/releases/download/v0.1.2/StyleDNA_0.1.2_amd64.deb) · [RPM](https://github.com/Layfate/StyleDNA/releases/download/v0.1.2/StyleDNA-0.1.2-1.x86_64.rpm) |
 
-Installers are **unsigned**. Trusted Windows signing and Apple notarization require publisher credentials that are not available yet. Check the release's [platform verification record](docs/VERIFICATION.md) and [SHA-256 manifest](https://github.com/Layfate/StyleDNA/releases/download/v0.1.2/SHA256SUMS.txt) before installing. Full macOS/Linux desktop UI behavior remains unverified.
+Installers are **unsigned**. Trusted Windows signing and Apple notarization require publisher credentials that are not available yet. See the [platform verification record](docs/VERIFICATION.md) and repository [build record](docs/BUILD_ARTIFACTS.json) for details. Full macOS/Linux desktop UI behavior remains unverified.
 
 StyleDNA is a local-first desktop workspace for collecting visual references, analyzing their style, and generating reusable **`SKILL.md` files**. It pairs a Tauri 2 / React interface with a Python image-processing service and a versioned SQLite library.
 
