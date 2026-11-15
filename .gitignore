@@ -13,6 +13,8 @@ src-tauri/binaries/
 .env.*
 !.env.example
 *.log
+*.tsbuildinfo
+src-tauri/gen/
 playwright-report/
 test-results/
 .styledna-dev/
