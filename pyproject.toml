@@ -1,0 +1,37 @@
+[project]
+name = "styledna"
+version = "0.1.0"
+description = "Turn images into reusable AI style skills"
+requires-python = ">=3.12,<3.15"
+dependencies = [
+  "fastapi>=0.115,<1",
+  "uvicorn>=0.34,<1",
+  "pydantic>=2.10,<3",
+  "pillow>=11,<13",
+  "opencv-python-headless>=4.11,<5",
+  "numpy>=2,<3",
+  "httpx>=0.28,<1",
+  "python-multipart>=0.0.20,<1",
+  "platformdirs>=4,<5",
+]
+
+[dependency-groups]
+dev = ["pytest>=8,<10", "ruff>=0.12,<1", "pyinstaller>=6,<7", "pyyaml>=6,<7"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["backend/styledna"]
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests"]
+pythonpath = ["backend"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
