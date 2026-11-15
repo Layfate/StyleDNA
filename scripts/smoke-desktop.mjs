@@ -57,6 +57,11 @@ try {
   page.on('pageerror', (e) => failures.push(e.message))
   await page.getByRole('button', { name: 'New skill', exact: true }).waitFor()
   await page.getByRole('heading', { name: 'A home for your visual language.' }).waitFor()
+  await page.locator('.brand-icon img').waitFor()
+  await page.waitForFunction(() => {
+    const logo = document.querySelector('.brand-icon img')
+    return logo instanceof HTMLImageElement && logo.complete && logo.naturalWidth > 0
+  })
   await page.screenshot({ path: 'test-results/desktop-dashboard.png' })
   await page.getByRole('button', { name: 'New skill', exact: true }).click()
   await page.locator('input[type=file]').setInputFiles('examples/amber-study.png')

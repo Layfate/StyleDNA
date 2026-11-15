@@ -12,6 +12,7 @@ from fastapi.responses import FileResponse, JSONResponse, Response
 from pydantic import Field, ValidationError
 from starlette.concurrency import run_in_threadpool
 
+from . import __version__
 from .assets import AssetStore, ImageError
 from .compiler import compile_skill, slug
 from .config import MAX_IMAGE_BYTES, MAX_PACKAGE_BYTES, MAX_REFERENCES, MAX_UPLOAD_BYTES
@@ -156,7 +157,7 @@ def create_app(data_dir: Path, token: str, allowed_hosts=None) -> FastAPI:
 
     app = FastAPI(
         title="StyleDNA local service",
-        version="0.1.0",
+        version=__version__,
         lifespan=lifespan,
         docs_url=None,
         redoc_url=None,
@@ -189,7 +190,7 @@ def create_app(data_dir: Path, token: str, allowed_hosts=None) -> FastAPI:
 
     @app.get("/health")
     def health():
-        return {"status": "ready", "version": "0.1.0"}
+        return {"status": "ready", "version": __version__}
 
     @app.post("/api/assets")
     async def upload(files: list[UploadFile] = File()):

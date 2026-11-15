@@ -1,5 +1,7 @@
 # StyleDNA
 
+<img src="assets/branding/styledna-logo.png" width="88" alt="StyleDNA logo" />
+
 **Turn Images Into Reusable AI Style Skills.**
 
 StyleDNA is a local-first desktop workspace for collecting visual references, reviewing their style, and exporting reusable image-generation instructions. It pairs a Tauri 2 / React interface with a Python image-processing service and a versioned SQLite library.

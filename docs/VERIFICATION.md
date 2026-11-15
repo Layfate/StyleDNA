@@ -2,6 +2,14 @@
 
 Host: Windows x64, 2026-11-15 (Asia/Manila). Node 24.21.0, Python 3.12.10, Rust 1.100.0, pnpm 12.21.0, uv 0.12.19.
 
+## Branding update 0.1.1
+
+The supplied transparent blue helix/photo-frame logo is used unchanged in the sidebar and README. Desktop PNG/ICO/ICNS assets and the favicon are size/format conversions preserving transparency. The imported original's SHA-256 matches the supplied file. Version 0.1.1 identifies this update; it adds branding rather than Phase 2 features.
+
+After this update, the backend suite passed 40 tests, editor suite passed 5, complete browser suite passed 11, and native unit suite passed 2. TypeScript/Vite, formatting, lint, packaged-service smoke, and the actual branded Tauri/WebView2 workflow passed. The new logo was inspected in the desktop app; all six ICO image variants were confirmed embedded in the Windows executable. Updated `.exe` and `.msi` installers were built; filenames and hashes are in `BUILD_ARTIFACTS.json`.
+
+One initial browser run encountered a Windows access-denied error while publishing a staged upload; its isolated rerun and subsequent full suite passed. No image-import behavior was changed as part of this branding update.
+
 | Check | Verified result |
 | --- | --- |
 | `uv run pytest -q` | 40 passed, including safe image/package handling, persistence/revisions, authorization, jobs, Ollama fixtures, and portable-package budgets |

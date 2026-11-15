@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1 — 2026-11-15
+
+- Applied the supplied blue DNA helix/photo-frame logo to the sidebar, desktop application and installer icons, browser favicon, and repository branding. The original artwork and transparency are preserved.
+
 ## 0.1.0 — 2026-11-15
 
 Initial Phase 1 implementation: Tauri/React shell, authenticated FastAPI service, validated image ingestion, real local measurements, optional Ollama vision adapter, editable profiles, deterministic skill compilation, SQLite revisioned library, safe portable package roundtrip, themes and provider settings, core/browser tests, and build workflows.

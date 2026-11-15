@@ -3,7 +3,6 @@ import {
   AlertCircle,
   BookOpen,
   ChevronRight,
-  Dna,
   FlaskConical,
   History,
   LayoutDashboard,
@@ -30,6 +29,8 @@ import type { Page, SavedSkill, Settings } from './lib/types'
 import { Button } from './components/ui/button'
 import { Dialog } from './components/ui/dialog'
 import { Tooltip, TooltipProvider } from './components/ui/tooltip'
+import styleDnaLogo from '../assets/branding/styledna-logo.png'
+import packageInfo from '../package.json'
 
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const Studio = lazy(() => import('./pages/Studio'))
@@ -240,7 +241,7 @@ export default function App() {
           <aside className="sidebar">
             <button className="brand" onClick={() => go('dashboard')} aria-label="StyleDNA home">
               <span className="brand-icon">
-                <Dna size={25} strokeWidth={1.7} />
+                <img src={styleDnaLogo} alt="" draggable={false} />
               </span>
               <span className="brand-name">
                 Style<span className="brand-light">DNA</span>
@@ -320,7 +321,7 @@ export default function App() {
               <div className="sidebar-version">
                 <span className="status-dot" />
                 <span>Local workspace</span>
-                <span>v0.1</span>
+                <span>v{packageInfo.version}</span>
               </div>
             </div>
           </aside>
