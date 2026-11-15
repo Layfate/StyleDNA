@@ -4,6 +4,12 @@
 
 **Turn Images Into Reusable AI Style Skills.**
 
+[![Checks](https://github.com/Layfate/StyleDNA/actions/workflows/checks.yml/badge.svg)](https://github.com/Layfate/StyleDNA/actions/workflows/checks.yml)
+
+[Download the desktop preview](https://github.com/Layfate/StyleDNA/releases) · [Installation and release details](docs/RELEASING.md) · [Report an issue](https://github.com/Layfate/StyleDNA/issues)
+
+Preview installers are unsigned. Trusted Windows signing and Apple notarization require publisher credentials that are not available yet. Check each release's platform verification record and SHA-256 manifest before downloading.
+
 StyleDNA is a local-first desktop workspace for collecting visual references, analyzing their style, and generating reusable **`SKILL.md` files**. It pairs a Tauri 2 / React interface with a Python image-processing service and a versioned SQLite library.
 
 Its output is reusable **`SKILL.md` files and style profiles**. The workflow is **upload references → analyze style → review and edit → save or export skills**. See [product scope](docs/PRODUCT_SCOPE.md).
@@ -56,7 +62,7 @@ Alternatively, import [`examples/amber-study.zip`](examples/amber-study.zip) fro
 
 ## Optional local AI
 
-Install [Ollama](https://ollama.com/) and a compatible vision model separately. Start Ollama, open **Settings & Providers**, save/check its loopback address, and select a model reporting vision support. In the studio choose **Ollama vision** and start analysis. Model discovery never downloads or runs a model automatically. Cloud-routed Ollama models are excluded.
+Install [Ollama](https://ollama.com/) and a compatible vision model separately. For example, `ollama pull gemma3:4b` installs a vision-capable model (about 3.4 GB; see its [model page and license](https://ollama.com/library/gemma3:4b)). Start Ollama, open **Settings & Providers**, save/check its loopback address, and select a model reporting vision support. In the studio choose **Ollama vision** and start analysis. Model discovery never downloads or runs a model automatically. Cloud-routed Ollama models are excluded.
 
 Local measurements extract numeric evidence. They intentionally leave semantic style fields unassessed. Human edits remain useful with no model installed. Ollama interpretations require review and are not calibrated confidence scores. Multiple references currently have equal influence.
 

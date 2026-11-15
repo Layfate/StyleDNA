@@ -1,6 +1,6 @@
 # Intended only for a disposable GitHub-hosted Windows runner.
 $ErrorActionPreference = 'Stop'
-if ($env:GITHUB_ACTIONS -ne 'true' -or !$env:RUNNER_TEMP) {
+if ($env:GITHUB_ACTIONS -ne 'true' -or $env:RUNNER_ENVIRONMENT -ne 'github-hosted' -or !$env:RUNNER_TEMP) {
     throw 'Run installer verification only on a disposable GitHub Actions runner.'
 }
 $workspace = (Get-Location).Path
@@ -10,6 +10,13 @@ if (!$taskRoot.StartsWith($runnerRoot, [StringComparison]::OrdinalIgnoreCase)) {
     throw 'Installation target must remain under RUNNER_TEMP.'
 }
 New-Item -ItemType Directory -Path $taskRoot -Force | Out-Null
+$defaultData = Join-Path $env:APPDATA 'com.styledna.desktop'
+$localData = Join-Path $env:LOCALAPPDATA 'com.styledna.desktop'
+foreach ($dataPath in @($defaultData, $localData)) {
+    if (Test-Path -LiteralPath $dataPath) { throw 'Expected a fresh runner without an existing StyleDNA library' }
+    New-Item -ItemType Directory -Path $dataPath | Out-Null
+    Set-Content -LiteralPath (Join-Path $dataPath 'retention-check.txt') -Value 'Preserve my StyleDNA data'
+}
 
 function Run-Installer([string]$Executable, [string]$Arguments) {
     $task = Start-Process -FilePath $Executable -ArgumentList $Arguments -WindowStyle Hidden -PassThru
@@ -40,9 +47,13 @@ foreach ($format in @('msi', 'nsis')) {
         & uv run python scripts/smoke-sidecar.py --binary $service
         if ($LASTEXITCODE -ne 0) { throw 'Installed service smoke failed' }
         $env:STYLEDNA_SMOKE_APP = $app
-        $env:STYLEDNA_SMOKE_DATA_DIR = Join-Path $taskRoot "data-$format"
+        # Exercise the exact default location that the uninstaller's optional data cleanup targets.
+        $env:STYLEDNA_SMOKE_DATA_DIR = $defaultData
         & node scripts/smoke-desktop.mjs
         if ($LASTEXITCODE -ne 0) { throw 'Installed desktop smoke failed' }
+        $beforeUninstall = @(Get-ChildItem -LiteralPath $defaultData -Recurse -File | ForEach-Object {
+            @{ Path = $_.FullName; Hash = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash }
+        })
     } finally {
         if ($installed) {
             if ($format -eq 'msi') {
@@ -58,8 +69,18 @@ foreach ($format in @('msi', 'nsis')) {
     if ((Test-Path -LiteralPath $app) -or (Test-Path -LiteralPath $service)) {
         throw 'Uninstaller left application executables behind'
     }
-    if (!(Test-Path -LiteralPath (Join-Path $taskRoot "data-$format/styledna.sqlite3"))) {
+    if (!(Test-Path -LiteralPath (Join-Path $defaultData 'styledna.sqlite3'))) {
         throw 'Expected test library to remain after uninstall'
+    }
+    foreach ($entry in $beforeUninstall) {
+        if (!(Test-Path -LiteralPath $entry.Path) -or (Get-FileHash -LiteralPath $entry.Path -Algorithm SHA256).Hash -ne $entry.Hash) {
+            throw 'Uninstaller changed or removed a saved library file'
+        }
+    }
+    foreach ($dataPath in @($defaultData, $localData)) {
+        if ((Get-Content -LiteralPath (Join-Path $dataPath 'retention-check.txt') -Raw).Trim() -ne 'Preserve my StyleDNA data') {
+            throw 'Uninstaller removed default application data'
+        }
     }
     Write-Output "${format}: install, bundled service, real desktop workflow, uninstall, and data preservation PASS"
 }
