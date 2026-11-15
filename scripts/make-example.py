@@ -51,7 +51,14 @@ with tempfile.TemporaryDirectory() as root:
     )
     profile.traits["rendering"] = Trait(value="Matte, flat color fields with clean silhouettes")
     saved = library.save(profile, 0)
-    (output / "amber-study.zip").write_bytes(export_package(library, assets, profile.id))
+    package = export_package(library, assets, profile.id)
+    (output / "amber-study.zip").write_bytes(package)
+    for reference_id in profile.reference_ids:
+        destination = output / "references" / f"{reference_id}.png"
+        destination.parent.mkdir(exist_ok=True)
+        destination.write_bytes(assets.path(reference_id).read_bytes())
     (output / "SKILL.md").write_text(saved["markdown"], encoding="utf-8")
-    (output / "style.json").write_text(profile.model_dump_json(indent=2), encoding="utf-8")
+    (output / "style.json").write_text(
+        StyleProfile.model_validate(saved["profile"]).model_dump_json(indent=2), encoding="utf-8"
+    )
 print("Created the MIT-licensed synthetic amber study and portable package.")

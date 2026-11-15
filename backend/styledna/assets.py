@@ -3,6 +3,7 @@ import io
 import json
 import re
 import shutil
+import threading
 import warnings
 from pathlib import Path
 from uuid import uuid4
@@ -29,6 +30,7 @@ class AssetStore:
         self.staging = root / "staging"
         self.root.mkdir(parents=True, exist_ok=True)
         self.staging.mkdir(parents=True, exist_ok=True)
+        self.decode_slots = threading.Semaphore(2)
 
     def path(self, asset_id: str, variant: str = "reference") -> Path:
         if not re.fullmatch(r"[a-f0-9]{32}", asset_id):
@@ -54,6 +56,10 @@ class AssetStore:
         shutil.rmtree(path, ignore_errors=True)
 
     def import_image(self, data: bytes, filename: str) -> Reference:
+        with self.decode_slots:
+            return self._import_image(data, filename)
+
+    def _import_image(self, data: bytes, filename: str) -> Reference:
         if not data or len(data) > MAX_IMAGE_BYTES:
             raise ImageError("Each image must be nonempty and at most 20 MiB")
         if sum(p.stat().st_size for p in self.root.rglob("*") if p.is_file()) > MAX_STORAGE_BYTES:
@@ -109,6 +115,10 @@ class AssetStore:
             preview.thumbnail((THUMBNAIL_SIZE, THUMBNAIL_SIZE))
             preview.save(staged / "thumbnail.webp", "WEBP", quality=85)
             content = (staged / "reference.png").read_bytes()
+            if len(content) > MAX_IMAGE_BYTES:
+                raise ImageError(
+                    "The normalized reference exceeds 20 MiB. Resize the image and retry."
+                )
             ref = Reference(
                 id=asset_id,
                 filename=re.split(r"[/\\]", filename)[-1][:255] or "reference.png",

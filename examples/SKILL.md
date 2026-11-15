@@ -51,7 +51,7 @@ Use reference conditioning only when the selected generator supports it.
 
 ## References
 
-- [Reference 1](references/9ca1d5e428b943cd9b5d21c9b1c6c3b8.png)
+- [Reference 1](references/4997bac9f07f47dc9bd488c66a22d743.png)
 
 ## Limitations
 

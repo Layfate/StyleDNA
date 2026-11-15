@@ -2,7 +2,7 @@ from datetime import UTC, datetime
 from typing import Annotated, Literal
 from uuid import uuid4
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 ShortText = Annotated[str, Field(max_length=500)]
 TraitKey = Literal[
@@ -111,6 +111,14 @@ class StyleProfile(StrictModel):
     analysis: AnalysisResult | None = None
     created_at: str = Field(default_factory=now, max_length=64)
     updated_at: str = Field(default_factory=now, max_length=64)
+
+    @model_validator(mode="after")
+    def analysis_matches_references(self):
+        if self.analysis and not {o.reference_id for o in self.analysis.observations}.issubset(
+            self.reference_ids
+        ):
+            raise ValueError("Analysis contains references outside this style; analyze again")
+        return self
 
     @field_validator("name")
     @classmethod

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "id": "8e605fcb765b4538a92ef4a5cc83ce07",
+  "id": "4205ee3fc7f3421fa6cae5d3edf091fa",
   "name": "Amber botanical study",
   "description": "A manually authored study of flat organic forms and a restrained earth palette.",
   "category": "Illustration",
@@ -82,7 +82,7 @@
     "The new subject does not need arches, leaves, or a sun"
   ],
   "reference_ids": [
-    "9ca1d5e428b943cd9b5d21c9b1c6c3b8"
+    "4997bac9f07f47dc9bd488c66a22d743"
   ],
   "analysis": {
     "mode": "measurements",
@@ -152,7 +152,7 @@
     "subject_exclusions": [],
     "observations": [
       {
-        "reference_id": "9ca1d5e428b943cd9b5d21c9b1c6c3b8",
+        "reference_id": "4997bac9f07f47dc9bd488c66a22d743",
         "measurements": {
           "palette": [
             {
@@ -222,8 +222,8 @@
         }
       }
     ],
-    "analyzed_at": "2026-11-15T02:26:50.934039+00:00"
+    "analyzed_at": "2026-11-15T02:32:34.985268+00:00"
   },
-  "created_at": "2026-11-15T02:26:50.934039+00:00",
-  "updated_at": "2026-11-15T02:26:50.934039+00:00"
+  "created_at": "2026-11-15T02:32:34.993783+00:00",
+  "updated_at": "2026-11-15T02:32:34.993783+00:00"
 }

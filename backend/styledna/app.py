@@ -66,6 +66,11 @@ class LocalBoundary:
         if scope["type"] != "http":
             return await self.app(scope, receive, send)
         headers = {k.decode().lower(): v.decode() for k, v in scope["headers"]}
+        body_limit = (
+            2 * 1024**2
+            if headers.get("content-type", "").startswith("application/json")
+            else MAX_PACKAGE_BYTES + 1024**2
+        )
         host = headers.get("host", "").split(":", 1)[0]
         origin = headers.get("origin")
         code, error = None, None
@@ -83,7 +88,7 @@ class LocalBoundary:
         ):
             code, error = 415, "Expected JSON or a multipart file upload"
         try:
-            if int(headers.get("content-length", "0")) > MAX_PACKAGE_BYTES + 1024**2:
+            if int(headers.get("content-length", "0")) > body_limit:
                 code, error = 413, "Request exceeds the upload limit"
         except ValueError:
             code, error = 400, "Invalid content length"
@@ -110,7 +115,7 @@ class LocalBoundary:
             message = await receive()
             if message["type"] == "http.request":
                 consumed += len(message.get("body", b""))
-                if consumed > MAX_PACKAGE_BYTES + 1024**2:
+                if consumed > body_limit:
                     raise BodyLimitError()
             return message
 
