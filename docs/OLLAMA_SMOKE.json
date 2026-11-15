@@ -1,0 +1,39 @@
+{
+  "date": "2026-11-15",
+  "ollama_version": "0.40.16",
+  "model": "gemma3:4b",
+  "quantization": "Q4_K_M",
+  "hardware": "NVIDIA GeForce RTX 4060 8 GiB; CUDA",
+  "reference_sha256": "f05773b677d064a1157cf954cb91db8fc8dae08ef241363ede08c352af908dbe",
+  "reference_source": "examples/amber-study.png and its horizontal mirror",
+  "method": "Actual packaged-service HTTP jobs, no simulated provider; explicit save and ZIP provenance/content verification",
+  "cases": [
+    {
+      "reference_count": 1,
+      "seconds": 76.92,
+      "state": "completed",
+      "mode": "ollama",
+      "saved_revision": 1,
+      "observation_count": 1,
+      "visual_identity": {
+        "value": "Minimalist, geometric, mid-century modern inspired, earthy tones, flat design.",
+        "source": "ollama"
+      },
+      "package_sha256": "1a97a7bfb2d40c572bd1e544a080bb6f33093f10ce3f1cde39208481a735bf61"
+    },
+    {
+      "reference_count": 2,
+      "seconds": 28.05,
+      "state": "completed",
+      "mode": "ollama",
+      "saved_revision": 1,
+      "observation_count": 2,
+      "visual_identity": {
+        "value": "Minimalist, geometric, mid-century modern inspired, earthy tones, flat design.",
+        "source": "ollama"
+      },
+      "package_sha256": "46ca9e405278cdf640dc47a560b578c74bbf141d26f84e71dc4ce337a9271b8d"
+    }
+  ],
+  "limits": "Functional smoke run; timings are not benchmarks and subjective traits require review. Models/tools downloaded only for this opt-in test, not bundled with StyleDNA."
+}

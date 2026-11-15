@@ -16,3 +16,11 @@ The review also recommended a 1100 × 700 layout check. It reproduced a clipped 
 Before this final review, an earlier reviewer reproduced focused-tag and in-flight-save edit loss, then hit a model usage limit before completing its report. Those two findings were fixed with regression tests; the completed final review confirmed their fixes. No incomplete review was treated as a clean approval.
 
 Builder decisions retained: local-first skill authoring; explicit measurements versus optional Ollama interpretation; equal reference weighting; a two-panel studio with optional bottom preview; streamed native exports through a restricted command; local Git delivery with no remote publishing. Platform/live-model verification remains disclosed. The later user clarification in `PRODUCT_SCOPE.md` removes in-app image synthesis and generated-image history from scope.
+
+## Public preview release review
+
+The user subsequently authorized public GitHub publication and the remaining release checks. A fresh read-only reviewer checked the release workflow, installed-service/desktop smoke scripts, live-model smoke, publication limits, and tracked/history contents. It found no Critical issues and one Important verification gap: testing retention in a custom directory did not exercise the uninstaller's default-data cleanup target.
+
+The revised Windows installer check uses the default roaming data location on a fresh hosted runner, records database/reference file hashes before uninstall, and checks both roaming/local sentinels afterward. A runner-guard observation became necessary to safely perform that test: automation now requires `RUNNER_ENVIRONMENT=github-hosted` and rejects preexisting StyleDNA data. No normal-user library is used. There are no deferred release-review code findings.
+
+The reviewer explicitly did not certify pending CI/live-model outcomes, final artifact hashes/tag provenance, exhaustive secret absence, retail clean-machine behavior, macOS/Linux full UI behavior, trusted signing/notarization, or subjective model quality. Those require separate evidence or remain documented limits in `VERIFICATION.md` and `RELEASING.md`. Publication is gated on successful exact-commit jobs; earlier failed attempts are retained in the verification record.

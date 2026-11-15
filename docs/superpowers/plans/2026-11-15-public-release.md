@@ -21,11 +21,11 @@
 
 ## Tasks
 
-- [ ] Audit source/history for accidental credentials or large build/data objects; create public repository and run existing CI.
-- [ ] Make packaged-sidecar smoke platform independent; verify installer install/launch/uninstall on a fresh Windows runner and package startup on other platform runners.
-- [ ] Test actual single- and multi-reference Ollama vision analysis without simulated responses; verify saved/exported skill output.
-- [ ] Fix CI failures from evidence, then publish passing unsigned installers and SHA-256 checksums as a preview release.
-- [ ] Update installation, verification, and signing documentation; perform an independent release review and verify public URLs/assets.
+- [x] Audit source/history for accidental credentials or large build/data objects; create public repository and run existing CI.
+- [x] Make packaged-sidecar smoke platform independent; verify installer install/launch/uninstall on a fresh Windows runner and package startup on other platform runners.
+- [x] Test actual single- and multi-reference Ollama vision analysis without simulated responses; verify saved/exported skill output.
+- [x] Fix CI failures from evidence, then publish passing unsigned installers and SHA-256 checksums as a preview release.
+- [x] Update installation, verification, and signing documentation; perform an independent release review and verify public URLs/assets.
 
 ## Review focus
 

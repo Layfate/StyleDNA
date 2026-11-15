@@ -1,18 +1,52 @@
 {
   "version": "0.1.2",
-  "platform": "windows-x86_64",
-  "signed": false,
-  "built_on": "2026-11-15",
+  "tag": "v0.1.2-preview.1",
+  "source_commit": "d4f675769688e3d15b79954f1178c6a423fccf8f",
+  "build_run": "https://github.com/Layfate/StyleDNA/actions/runs/43696212373",
+  "signed_by_trusted_publisher": false,
+  "apple_notarized": false,
   "installers": [
     {
-      "file": "artifacts/windows/StyleDNA_0.1.2_x64-setup.exe",
-      "bytes": 80164365,
-      "sha256": "9b356b05ff46b2478c7c8697c04c354d89eb063f5d5058354ed4adc45c9696a1"
+      "file": "StyleDNA-0.1.2-1.x86_64.rpm",
+      "bytes": 106886380,
+      "sha256": "c8ca773eac0ba85bc62e4db3cfb1a5a92d52f967810eb22d5005c1017dde0149",
+      "source_artifact": "StyleDNA-0.1.2-Linux-X64-unsigned"
     },
     {
-      "file": "artifacts/windows/StyleDNA_0.1.2_x64_en-US.msi",
+      "file": "StyleDNA.app.zip",
+      "bytes": 75458409,
+      "sha256": "e3680593552a5bed3a8395fa6843c7970a081e6e29ffae4e4a651efe86cbd95a",
+      "source_artifact": "StyleDNA-0.1.2-macOS-ARM64-unsigned"
+    },
+    {
+      "file": "StyleDNA_0.1.2_aarch64.dmg",
+      "bytes": 76532275,
+      "sha256": "1b94c6fd82d51072ee2a6953905902c56bd65cab968ce18810114436d8a14544",
+      "source_artifact": "StyleDNA-0.1.2-macOS-ARM64-unsigned"
+    },
+    {
+      "file": "StyleDNA_0.1.2_amd64.AppImage",
+      "bytes": 185346552,
+      "sha256": "94cf7c33bcfb3cc223c10fc45924e75394246e4a5807e01cfd3a9ca9c678b81d",
+      "source_artifact": "StyleDNA-0.1.2-Linux-X64-unsigned"
+    },
+    {
+      "file": "StyleDNA_0.1.2_amd64.deb",
+      "bytes": 106881552,
+      "sha256": "755a76ce47e3f45bcfea1db1feb5d8eba4d9243243e36aee9f4e8e1265cc6264",
+      "source_artifact": "StyleDNA-0.1.2-Linux-X64-unsigned"
+    },
+    {
+      "file": "StyleDNA_0.1.2_x64-setup.exe",
+      "bytes": 80160774,
+      "sha256": "89ae261c6f8a26d653fd1714fcd45589fe60dccfbb652ed1c1287c02215c9893",
+      "source_artifact": "StyleDNA-0.1.2-Windows-X64-unsigned"
+    },
+    {
+      "file": "StyleDNA_0.1.2_x64_en-US.msi",
       "bytes": 81235968,
-      "sha256": "0d0403dd43701c90066e2f0e54fa50db2bb8952bf107fa632041ce17bdfd7c31"
+      "sha256": "945ec526efc311b9e705f6d4d30fee5238080f0afed6748a6d82c5bbc9bf0792",
+      "source_artifact": "StyleDNA-0.1.2-Windows-X64-unsigned"
     }
   ],
   "verification": "docs/VERIFICATION.md"

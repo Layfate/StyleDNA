@@ -2,6 +2,28 @@
 
 Host: Windows x64, 2026-11-15 (Asia/Manila). Node 24.21.0, Python 3.12.10, Rust 1.100.0, pnpm 12.21.0, uv 0.12.19.
 
+## Public preview release validation
+
+The repository is now public at [Layfate/StyleDNA](https://github.com/Layfate/StyleDNA). [GitHub Checks](https://github.com/Layfate/StyleDNA/actions/runs/43696211835) and [all three platform jobs](https://github.com/Layfate/StyleDNA/actions/runs/43696212373) passed for release source commit `d4f6757`. Release hardening changes affect verification scripts and documentation; the application remains version 0.1.2.
+
+| Release platform | Successful hosted-runner checks |
+| --- | --- |
+| Windows x64 / Server 2022 | Built MSI/NSIS; installed each; ran deployed Python service and actual Tauri/WebView2 workflow (upload, analysis, edit, save, native ZIP dialog/export, clipboard, 900/1100/1280/1440 resizing at normal zoom, themes, service-failure/unsaved-close recovery); uninstalled each; default database/reference hashes and roaming/local sentinels retained |
+| macOS ARM64 / macOS 15 | Built app/DMG; standalone and app-embedded Python service passed image import, real measurements, package import, and parent-pipe shutdown |
+| Linux x64 / Ubuntu 24.04 | Built AppImage/DEB/RPM; standalone service passed; installed DEB, verified deployed service with real import/measurements/package/shutdown, then removed the package |
+
+The release uses the exact-commit CI artifacts, not the earlier locally built Windows installers. `BUILD_ARTIFACTS.json` records their public filenames, sizes, SHA-256 hashes, source artifact names, source commit, and successful run. The old local build hashes are preserved separately in `LOCAL_WINDOWS_BUILD_ARTIFACTS.json`. Release tag: [`v0.1.2-preview.1`](https://github.com/Layfate/StyleDNA/releases/tag/v0.1.2-preview.1); seven platform packages plus checksum/JSON manifests, explicitly unsigned. Installed Windows screenshots at normal zoom were inspected for readability, spacing, and image/editor balance; the README image comes from the successful hosted native run.
+
+Actual local Ollama vision inference passed using **Ollama 0.40.16, gemma3:4b (Q4_K_M), NVIDIA RTX 4060 8 GiB**. The packaged service discovered the installed vision model, analyzed the supplied synthetic Amber reference, and then analyzed the reference plus its mirrored variant and synthesized their shared traits. The cases took 76.92 s (cold first request) and 28.05 s (two observations plus synthesis). These are individual smoke-run durations, not benchmark claims. All four real `/api/chat` requests returned HTTP 200; model layers were offloaded to CUDA.
+
+Both cases returned schema-valid nonempty style traits with Ollama provenance, retained numeric measurements, did not auto-save, and passed explicit save and portable ZIP verification. The ZIP's profile retained the complete analysis and its `SKILL.md` matched the saved compilation. The model described the synthetic reference as minimalist/geometric with earthy tones. This establishes working inference and export, not calibrated semantic accuracy or compatibility with every model. Repeat with `scripts/smoke-ollama.py`; tools/models were staged only under ignored verification directories, and the owned Ollama server was stopped after testing.
+
+[Platform run 43695436864](https://github.com/Layfate/StyleDNA/actions/runs/43695436864) successfully built Linux x64 AppImage/DEB/RPM and macOS ARM64 app/DMG. The installed Debian service and embedded macOS service passed real import/measurement/package/shutdown checks. Its Windows MSI installed and its bundled service passed; the hosted UI check failed to establish WebView2 CDP, so that Windows job is **not** counted as a successful installer workflow. The following run pins Windows Server 2022 after investigating the documented upstream [runner/WebView2 issue](https://github.com/actions/runner-images/issues/14738).
+
+A fresh release review found that the initial Windows retention check used a custom data folder and therefore could not detect default-data cleanup. The updated test exercises the actual default roaming directory, verifies database/reference hashes, checks roaming/local sentinels, and refuses self-hosted runners or preexisting StyleDNA data. Successful installation evidence must come from that updated test.
+
+One local native recheck stopped at the Save As foreground guard before sending keyboard input. Dialog enumeration and targeted-control probes did not yield a successful export; this attempt is recorded as a failed automation run. The same native workflow subsequently passed twice from installed packages on the hosted Windows runner, including actual save dialogs. Browser/package verification and release-platform gates are recorded separately.
+
 ## Image-to-skill scope correction 0.1.2
 
 The user clarified that StyleDNA generates reusable image-style skills. AI Generator, generated-image History, their planned screens, and their future roadmap entries were removed. Navigation now exposes Dashboard, Studio, Library, and Settings only. Saved skill revision history remains supported. `PRODUCT_SCOPE.md` is the current scope authority and overrides older design references.
@@ -52,12 +74,12 @@ The completed read-only whole-branch review reported no Critical issues, four Im
 
 The review's short-window recommendation reproduced clipped analysis controls. The final UI bounds and scrolls the options/progress area while keeping Analyze visible; its browser regression passes. Earlier focused-tag and pending-save edit loss also have RED→GREEN regressions.
 
-## Unverified or not performed
+## Remaining limits
 
-- Live Ollama vision inference: HTTP fixtures pass; no model was downloaded or live inference claimed.
-- macOS/Linux runtime/installers: workflows configured but not run on this Windows host.
-- GitHub Actions: configured locally, not executed on GitHub.
-- Clean-machine installer installation/uninstallation, signing, notarization, public releases, and GitHub publishing: not performed.
+- Generalized semantic model quality, unrelated reference sets, and all Ollama model families are not certified; the real inference smoke above covers the supplied synthetic study and a mirrored variant.
+- macOS/Linux full desktop UI behavior and installation across retail OS configurations remain unverified. Their native packages and embedded/installed services have been checked on hosted platform runners.
+- Trusted installer signing and Apple notarization are unavailable: the maintainer has no signing identities. Preview downloads must be labeled unsigned.
+- Hosted CI runners include system dependencies. They do not prove installer bootstrapping on a retail Windows machine without WebView2 or test every Windows version.
 - Image synthesis, generated-image history, and model training are outside the clarified product scope. Further work focuses on skill extraction/authoring quality, compatibility, reliability, and platform validation.
 
-No benchmark results or universal coding-agent compatibility are claimed. Tests use isolated data. The repository stays local on `feat/phase-one`; there is no remote or separate base branch to merge into.
+No benchmark results or universal coding-agent compatibility are claimed. Tests use synthetic references and isolated development data; installer data checks run only on fresh hosted runners. The local working branch is `feat/phase-one` and publishes to the public remote's `main` branch. See [release procedure and limitations](RELEASING.md).

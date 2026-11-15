@@ -4,7 +4,7 @@ StyleDNA 0.1 is an initial local-first implementation. Security fixes target the
 
 ## Reporting
 
-Do not publish vulnerabilities containing exploit packages, private images, local paths, or credentials in a public issue. If the hosted repository has GitHub private vulnerability reporting enabled, use **Security → Report a vulnerability**. Otherwise contact a repository maintainer privately through their listed contact channel. This local repository does not invent a support email or claim a reporting service has been enabled.
+Report vulnerabilities privately through [GitHub Security → Report a vulnerability](https://github.com/Layfate/StyleDNA/security/advisories/new). Private vulnerability reporting is enabled. Do not post exploit packages, private images, local paths, or credentials in a public issue.
 
 Include the affected version, OS, minimal reproduction, impact, and whether the flaw crosses the webview, loopback API, package, or image boundary. Redact user data.
 
