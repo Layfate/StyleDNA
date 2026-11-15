@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "id": "8e605fcb765b4538a92ef4a5cc83ce07",
+  "name": "Amber botanical study",
+  "description": "A manually authored study of flat organic forms and a restrained earth palette.",
+  "category": "Illustration",
+  "tags": [
+    "organic",
+    "earth tones",
+    "flat"
+  ],
+  "favorite": false,
+  "palette": [
+    {
+      "hex": "#DCD0B8",
+      "share": 0.4444359756097561
+    },
+    {
+      "hex": "#6F5940",
+      "share": 0.4175495426829268
+    },
+    {
+      "hex": "#DEB579",
+      "share": 0.1140625
+    },
+    {
+      "hex": "#E9DFCB",
+      "share": 0.012404725609756098
+    },
+    {
+      "hex": "#DDD0B8",
+      "share": 0.008746189024390245
+    },
+    {
+      "hex": "#DCD0B7",
+      "share": 0.0028010670731707316
+    }
+  ],
+  "traits": {
+    "visual_identity": {
+      "value": "",
+      "source": "user"
+    },
+    "lighting": {
+      "value": "Flat ambient illumination without directional shadows",
+      "source": "user"
+    },
+    "linework": {
+      "value": "",
+      "source": "user"
+    },
+    "texture": {
+      "value": "",
+      "source": "user"
+    },
+    "shapes": {
+      "value": "Rounded architectural masses balanced with simple organic forms",
+      "source": "user"
+    },
+    "composition": {
+      "value": "",
+      "source": "user"
+    },
+    "background": {
+      "value": "",
+      "source": "user"
+    },
+    "rendering": {
+      "value": "Matte, flat color fields with clean silhouettes",
+      "source": "user"
+    }
+  },
+  "positive_rules": [
+    "Use broad, simplified organic forms",
+    "Keep generous negative space"
+  ],
+  "negative_constraints": [
+    "Avoid glossy materials",
+    "Avoid photographic detail"
+  ],
+  "subject_exclusions": [
+    "The new subject does not need arches, leaves, or a sun"
+  ],
+  "reference_ids": [
+    "9ca1d5e428b943cd9b5d21c9b1c6c3b8"
+  ],
+  "analysis": {
+    "mode": "measurements",
+    "model": null,
+    "palette": [
+      {
+        "hex": "#DCD0B8",
+        "share": 0.4444359756097561
+      },
+      {
+        "hex": "#6F5940",
+        "share": 0.4175495426829268
+      },
+      {
+        "hex": "#DEB579",
+        "share": 0.1140625
+      },
+      {
+        "hex": "#E9DFCB",
+        "share": 0.012404725609756098
+      },
+      {
+        "hex": "#DDD0B8",
+        "share": 0.008746189024390245
+      },
+      {
+        "hex": "#DCD0B7",
+        "share": 0.0028010670731707316
+      }
+    ],
+    "traits": {
+      "visual_identity": {
+        "value": "",
+        "source": "user"
+      },
+      "lighting": {
+        "value": "",
+        "source": "user"
+      },
+      "linework": {
+        "value": "",
+        "source": "user"
+      },
+      "texture": {
+        "value": "",
+        "source": "user"
+      },
+      "shapes": {
+        "value": "",
+        "source": "user"
+      },
+      "composition": {
+        "value": "",
+        "source": "user"
+      },
+      "background": {
+        "value": "",
+        "source": "user"
+      },
+      "rendering": {
+        "value": "",
+        "source": "user"
+      }
+    },
+    "positive_rules": [],
+    "negative_constraints": [],
+    "subject_exclusions": [],
+    "observations": [
+      {
+        "reference_id": "9ca1d5e428b943cd9b5d21c9b1c6c3b8",
+        "measurements": {
+          "palette": [
+            {
+              "hex": "#DCD0B8",
+              "share": 0.4444359756097561
+            },
+            {
+              "hex": "#6F5940",
+              "share": 0.4175495426829268
+            },
+            {
+              "hex": "#DEB579",
+              "share": 0.1140625
+            },
+            {
+              "hex": "#E9DFCB",
+              "share": 0.012404725609756098
+            },
+            {
+              "hex": "#DDD0B8",
+              "share": 0.008746189024390245
+            },
+            {
+              "hex": "#DCD0B7",
+              "share": 0.0028010670731707316
+            }
+          ],
+          "luminance": 0.6150047076757532,
+          "saturation": 0.2907571885461502,
+          "contrast": 0.23022086528926422,
+          "edge_density": 0.02492378048780488,
+          "texture": 287.13363002942765
+        },
+        "traits": {
+          "visual_identity": {
+            "value": "",
+            "source": "user"
+          },
+          "lighting": {
+            "value": "",
+            "source": "user"
+          },
+          "linework": {
+            "value": "",
+            "source": "user"
+          },
+          "texture": {
+            "value": "",
+            "source": "user"
+          },
+          "shapes": {
+            "value": "",
+            "source": "user"
+          },
+          "composition": {
+            "value": "",
+            "source": "user"
+          },
+          "background": {
+            "value": "",
+            "source": "user"
+          },
+          "rendering": {
+            "value": "",
+            "source": "user"
+          }
+        }
+      }
+    ],
+    "analyzed_at": "2026-11-15T02:26:50.934039+00:00"
+  },
+  "created_at": "2026-11-15T02:26:50.934039+00:00",
+  "updated_at": "2026-11-15T02:26:50.934039+00:00"
+}
