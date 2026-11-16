@@ -26,6 +26,15 @@
 
 Installers are **unsigned**. Trusted Windows signing and Apple notarization require publisher credentials that are not available yet. See the [platform verification record](docs/VERIFICATION.md) and repository [build record](docs/BUILD_ARTIFACTS.json) for details. Full macOS/Linux desktop UI behavior remains unverified.
 
+### Use StyleDNA inside your AI agent
+
+Prefer to stay in Claude Code, Cursor, Copilot or another agent? StyleDNA is also available as ready-to-install agent skills on Agensi:
+
+- [StyleDNA: Image to Style Skill](https://www.agensi.io/r/LAYFATE?to=/skills/styledna-image-to-style-skill&utm_source=github) turns reference images into a reusable style `SKILL.md`.
+- [StyleDNA Pro](https://www.agensi.io/r/LAYFATE?to=/skills/styledna-pro-style-skills-match-checker&utm_source=github) adds ready-to-paste prompts for Midjourney, Stable Diffusion, Flux, GPT Image, Gemini and Ideogram, plus a checker that scores your generations against the style.
+
+The desktop app stays free and open source.
+
 StyleDNA is a local-first desktop workspace for collecting visual references, analyzing their style, and generating reusable **`SKILL.md` files**. It pairs a Tauri 2 / React interface with a Python image-processing service and a versioned SQLite library.
 
 Its output is reusable **`SKILL.md` files and style profiles**. The workflow is **upload references → analyze style → review and edit → save or export skills**. See [product scope](docs/PRODUCT_SCOPE.md).
